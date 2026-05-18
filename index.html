@@ -41,6 +41,7 @@ header h1{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:900;}
 .tg{font-size:9px;padding:2px 6px;border-radius:8px;font-weight:500;}
 .tf{background:#e8f4ea;color:#3a7a48;} .ta{background:#f0ebe0;color:var(--muted);}
 .tc{background:#fff0ec;color:var(--coral);} .tp{background:#fdf5e0;color:#9a7a20;}
+/* area */
 .area-scroller{padding:13px;padding-bottom:80px;}
 .stats{display:flex;gap:6px;margin-bottom:10px;}
 .stat{flex:1;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:9px 10px;text-align:center;}
@@ -68,27 +69,21 @@ header h1{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:900;}
 .add-box{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:10px;}
 .add-box h3{font-size:12px;font-weight:600;margin-bottom:10px;color:var(--navy);}
 .fl{font-size:10px;color:var(--muted);margin-bottom:3px;margin-top:8px;}
-.fl:first-of-type{margin-top:0;}
 .ir{display:flex;gap:6px;}
 .inp{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 10px;font-size:13px;font-family:'Noto Sans TC',sans-serif;color:var(--navy);background:#faf7f2;outline:none;transition:border-color .2s;}
 .inp:focus{border-color:var(--gold);background:#fff;}
 .sel{border:1.5px solid var(--border);border-radius:8px;padding:9px 8px;font-size:12px;font-family:'Noto Sans TC',sans-serif;color:var(--navy);background:#faf7f2;outline:none;flex-shrink:0;}
-.btn-add{width:100%;padding:11px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;border:none;background:var(--navy);color:#fff;margin-top:10px;letter-spacing:.04em;transition:background .2s;}
-.btn-add:hover{background:#2a3045;}
+.btn-add{width:100%;padding:11px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;border:none;background:var(--navy);color:#fff;margin-top:10px;transition:background .2s;}
 .btn-add:active{background:var(--coral);}
+.hint{font-size:10px;color:var(--muted);background:#f8f4ec;border:1px solid var(--border);border-radius:8px;padding:9px 11px;line-height:1.7;margin-top:8px;}
+.sync-note{font-size:10px;color:var(--green);text-align:center;margin-top:6px;}
+.loading{text-align:center;padding:24px;color:var(--muted);font-size:12px;}
 .toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#1a2035ee;color:#fff;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:500;z-index:1000;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;}
-.ubox{border:1.5px dashed var(--border);border-radius:8px;padding:12px;text-align:center;cursor:pointer;margin-top:8px;transition:all .2s;}
-.ubox:hover{border-color:var(--gold);background:#fdf8ee;}
-.ubox p{font-size:10px;color:var(--muted);margin-top:3px;}
-.fmt{font-size:9px;color:#bbb;font-family:monospace;margin-top:3px;}
-.hint{font-size:10px;color:var(--muted);background:#f8f4ec;border:1px solid var(--border);border-radius:8px;padding:9px 11px;line-height:1.7;margin-top:8px;}
-.save-note{font-size:10px;color:var(--green);text-align:center;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:4px;}
 .bnav{position:fixed;bottom:0;left:0;right:0;background:var(--navy);display:flex;border-top:2px solid rgba(255,255,255,.1);z-index:999;}
 .nb{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:rgba(255,255,255,.4);font-size:9px;font-weight:500;position:relative;transition:color .2s;}
 .nb.active{color:var(--gold);}
 .nb .ico{font-size:17px;}
-.cbg{position:absolute;top:5px;right:20%;background:var(--coral);color:#fff;font-size:8px;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;padding:0 3px;}
 .empty{text-align:center;padding:24px;color:var(--muted);}
 .empty .ei{font-size:26px;margin-bottom:6px;}
 </style>
@@ -120,35 +115,31 @@ header h1{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:900;}
     <div class="stats" id="statsBar"></div>
     <div class="cf" id="catFilter"></div>
     <div class="sec">📍 地點清單</div>
-    <div class="pl" id="placeList"></div>
+    <div class="pl" id="placeList"><div class="loading">載入中...</div></div>
+
     <div class="add-box">
       <h3>➕ 新增到「<span id="areaLabel">廣安里</span>」</h3>
       <div class="fl">① 名稱</div>
       <div class="ir">
         <input class="inp" id="newName" placeholder="咖啡廳 / 餐廳 / 景點名稱" autocomplete="off">
         <select class="sel" id="newType">
-          <option value="☕">咖啡廳</option>
-          <option value="🍽">餐廳</option>
-          <option value="🍺">酒吧</option>
-          <option value="🥐">早午餐</option>
-          <option value="🏛">景點</option>
-          <option value="🛍">購物</option>
+          <option value="咖啡廳">☕ 咖啡廳</option>
+          <option value="燒肉">🥩 燒肉</option>
+          <option value="海鮮">🦞 海鮮</option>
+          <option value="甜點">🍰 甜點</option>
+          <option value="小吃">🍢 小吃</option>
+          <option value="景點">🏛 景點</option>
+          <option value="其他">🍽 其他</option>
         </select>
       </div>
       <div class="fl">② Naver Map 連結（可選）</div>
       <input class="inp" id="newLink" placeholder="https://naver.me/..." autocomplete="off">
-      <div class="fl">③ 備註（地址 / 營業時間，可選）</div>
-      <input class="inp" id="newNote" placeholder="例：수영구 광안로 58｜17:00–02:00" autocomplete="off">
+      <div class="fl">③ 營業時間（可選）</div>
+      <input class="inp" id="newHours" placeholder="例：11:00–22:00" autocomplete="off">
       <button class="btn-add" onclick="addPlace()">✓ 新增地點</button>
-      <div class="save-note">💾 資料自動儲存到瀏覽器，關掉重開都還在</div>
-      <div class="ubox" onclick="document.getElementById('fi').click()">
-        <div style="font-size:20px">📋</div>
-        <p>批次上傳清單（.txt）</p>
-        <div class="fmt">格式：名稱,https://naver.me/xxx,備註（每行一筆）</div>
-      </div>
-      <input type="file" id="fi" accept=".txt" style="display:none" onchange="uploadList(event)">
+      <div class="sync-note">☁️ 資料同步自 Google Sheets，所有裝置共享</div>
     </div>
-    <div class="hint">💡 <strong>如何取得 Naver 連結？</strong><br>手機 App → 找到地點 → 右上角「공유（分享）」→ 複製連結</div>
+    <div class="hint">💡 Naver Map App → 找到地點 → 右上角「공유」→ 複製連結</div>
   </div>
 </div>
 
@@ -156,80 +147,13 @@ header h1{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:900;}
   <div class="nb active" id="nb-itin" onclick="switchPage('itin')"><span class="ico">📅</span><span>行程</span></div>
   <div class="nb" id="nb-area" onclick="switchPage('area')"><span class="ico">🗺</span><span>地區</span></div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ── STORAGE KEY ──
-const STORE_KEY = 'busan_ap_v1';
+// ⚠️ 填入你的 GAS 部署網址
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbzedZr7RXWm7NiE3Teo1Wbr4cpf6scLweXxzuk698trmctlndpG8flrmr7VkWI8dKXC/exec';
 
-// ── DEFAULT DATA ──
-const DEFAULT_AP = {
-  '廣安里':[
-    {e:'🍪',n:'My Favorite Cookie',a:'수영구 광남로 103',h:'',cat:'咖啡廳',link:'',pln:false},
-    {e:'🥩',n:'언양불고기부산집본가',a:'수영구 남천바다로33번길 8',h:'11:00–22:00',cat:'餐廳',link:'',pln:false},
-    {e:'🍗',n:'아웃닭 광안점',a:'수영구 광안로 58・廣安站5號口步行8分',h:'17:00–02:00',cat:'餐廳',link:'',pln:false},
-    {e:'🥯',n:'All Sunday Bagel',a:'廣安里海灘旁',h:'',cat:'咖啡廳',link:'',pln:false},
-    {e:'🪖',n:'HELMET（Brunch）',a:'수영구 수영로554번가길 22 1-2층',h:'09:00–19:00（L.O.18:30）',cat:'早午餐',link:'',pln:false},
-    {e:'☕',n:'LAKE COFFEE BAR',a:'廣安站',h:'',cat:'咖啡廳',link:'',pln:false},
-    {e:'🌊',n:'廣安里海灘',a:'廣安大橋夜景聖地',h:'',cat:'景點',link:'',pln:true},
-    {e:'🏔',n:'荒嶺山烽火台',a:'360°全景制高點・免費',h:'',cat:'景點',link:'',pln:true},
-    {e:'🎵',n:'Millac the Market',a:'廣安里旁・面橋夜景',h:'10:00–00:00',cat:'景點',link:'',pln:true},
-  ],
-  '西面':[
-    {e:'🍜',n:'英子麵店 영자면옥',a:'西面站15號出口步行3分鐘',h:'',cat:'餐廳',link:'',pln:false},
-    {e:'🍚',n:'濟州家海鮮粥 西面店',a:'西面',h:'',cat:'餐廳',link:'',pln:false},
-    {e:'🥐',n:'No Baker No Bakers',a:'田浦咖啡街・Jeonpo-daero 227',h:'09:00–22:30',cat:'咖啡廳',link:'',pln:false},
-    {e:'🥗',n:'Soup or Salad（Brunch）',a:'田浦站步行4分・부산진구 동성로 39번길 7',h:'09:00–18:00',cat:'早午餐',link:'',pln:false},
-    {e:'🍞',n:'Toi et moi（法式吐司）',a:'田浦',h:'',cat:'咖啡廳',link:'',pln:false},
-    {e:'🍳',n:'HASH TABLE 해쉬테이블',a:'田浦洞 205-10',h:'平日 09:30–18:00・日 09:00–16:00',cat:'早午餐',link:'',pln:false},
-    {e:'🥞',n:'OH! CREPR',a:'西面',h:'',cat:'咖啡廳',link:'',pln:false},
-    {e:'🧋',n:'Franklin 咖啡',a:'田浦洞 354-1',h:'',cat:'咖啡廳',link:'',pln:false},
-    {e:'🌿',n:'老花園 올드맨션',a:'田浦站7號出口・부산진구 전포대로209번길 17-6',h:'',cat:'咖啡廳',link:'',pln:false},
-    {e:'🍺',n:'歐巴大排檔 아는오빠',a:'부산진구 동천로 85번길 7',h:'18:00–04:00',cat:'酒吧',link:'',pln:false},
-  ],
-  '影島':[
-    {e:'🎨',n:'白淺灘文化村',a:'影島區',h:'24小時・免費',cat:'景點',link:'',pln:true},
-    {e:'☕',n:'Go Slow 咖啡廳',a:'白淺灘文化村內',h:'11:00–22:00',cat:'咖啡廳',link:'',pln:true},
-    {e:'🚶',n:'絕影海岸散步路',a:'影島區',h:'24小時',cat:'景點',link:'',pln:true},
-    {e:'🌉',n:'影島大橋開橋秀',a:'每天14:00・限時15分鐘',h:'',cat:'景點',link:'',pln:true},
-    {e:'🦑',n:'影島海女村',a:'影島區',h:'',cat:'餐廳',link:'',pln:true},
-  ],
-  '南浦':[
-    {e:'🎡',n:'甘川洞文化村',a:'',h:'',cat:'景點',link:'',pln:true},
-    {e:'🎪',n:'富平罐頭市場',a:'',h:'',cat:'景點',link:'',pln:true},
-    {e:'🐟',n:'札嘎其市場',a:'',h:'09:00–21:00',cat:'餐廳',link:'',pln:false},
-    {e:'🏰',n:'釜山塔',a:'龍頭山公園',h:'',cat:'景點',link:'',pln:false},
-  ],
-  '海雲台':[
-    {e:'🎨',n:'Arte Museum',a:'',h:'',cat:'景點',link:'',pln:true},
-    {e:'🚃',n:'天空膠囊列車',a:'',h:'',cat:'景點',link:'',pln:true},
-    {e:'🏯',n:'海東龍宮寺',a:'',h:'',cat:'景點',link:'',pln:true},
-    {e:'🛍',n:'樂天 Outlet',a:'',h:'',cat:'購物',link:'',pln:true},
-    {e:'🎢',n:'Skyline Luge',a:'',h:'',cat:'景點',link:'',pln:true},
-    {e:'🌊',n:'海理團路',a:'海雲台站4號出口',h:'',cat:'景點',link:'',pln:false},
-  ],
-};
-
-// ── LOAD / SAVE ──
-function loadAP(){
-  try{
-    const raw=localStorage.getItem(STORE_KEY);
-    return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_AP));
-  }catch(e){
-    return JSON.parse(JSON.stringify(DEFAULT_AP));
-  }
-}
-function saveAP(){
-  try{ localStorage.setItem(STORE_KEY, JSON.stringify(AP)); }
-  catch(e){ console.warn('儲存失敗',e); }
-}
-
-let AP = loadAP();
-let curArea='廣安里', curCat='全部';
-
-// ── DAYS DATA ──
-const DAYS=[
+var DAYS=[
   {label:'Day 1',title:'抵達釜山',tag:'傍晚抵達',ev:[
     {t:'出發',n:'公司專車→桃園機場',d:'贈轉接頭＋網卡',c:''},
     {t:'晚上',n:'富平罐頭夜市',d:'旅行社招待糖餅 🥞',c:'hl',tg:['南浦','免費']},
@@ -272,178 +196,176 @@ const DAYS=[
   ]},
 ];
 
-// ── TOAST ──
+var catEmoji={全部:'🔍',咖啡廳:'☕',燒肉:'🥩',海鮮:'🦞',甜點:'🍰',小吃:'🍢',景點:'🏛',購物:'🛍',其他:'🍽'};
+var curArea='廣安里', curCat='全部';
+
+// ── Toast ──
 function toast(msg){
-  const el=document.getElementById('toast');
+  var el=document.getElementById('toast');
   el.textContent=msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'),2000);
+  setTimeout(function(){el.classList.remove('show');},2200);
 }
 
-// ── DAYS ──
+// ── API 呼叫 ──
+function api(params, cb){
+  var qs = Object.keys(params).map(function(k){
+    return encodeURIComponent(k)+'='+encodeURIComponent(params[k]);
+  }).join('&');
+  fetch(GAS_URL+'?'+qs)
+    .then(function(r){return r.json();})
+    .then(function(data){cb(null,data);})
+    .catch(function(err){cb(err,null);});
+}
+
+// ── 初始化行程 ──
 function initDays(){
-  const nav=document.getElementById('dayNav');
-  const tabs=document.getElementById('dayTabs');
-  const cont=document.getElementById('dayContent');
-  DAYS.forEach((d,i)=>{
-    const dot=document.createElement('div');
+  var nav=document.getElementById('dayNav');
+  var tabs=document.getElementById('dayTabs');
+  var cont=document.getElementById('dayContent');
+  DAYS.forEach(function(d,i){
+    var dot=document.createElement('div');
     dot.className='hday'+(i===0?' active':'');
-    dot.textContent=i+1; dot.onclick=()=>switchDay(i);
+    dot.textContent=i+1;
+    dot.onclick=function(){switchDay(i);};
     nav.appendChild(dot);
-    const tab=document.createElement('div');
+    var tab=document.createElement('div');
     tab.className='tab'+(i===0?' active':'');
-    tab.textContent=d.label; tab.onclick=()=>switchDay(i);
+    tab.textContent=d.label;
+    tab.onclick=function(){switchDay(i);};
     tabs.appendChild(tab);
-    const panel=document.createElement('div');
+    var panel=document.createElement('div');
     panel.className='day-panel'+(i===0?' active':'');
-    panel.innerHTML=`
-      <div class="day-header">
-        <div class="day-badge">${d.label}</div>
-        <div class="day-title">${d.title}</div>
-        <div class="day-lbl">${d.tag}</div>
-      </div>
-      <div class="timeline">
-        ${d.ev.map(e=>`
-          <div class="ev ${e.c}">
-            <div class="et">${e.t}</div>
-            <div class="eb">
-              <div class="en">${e.n}</div>
-              ${e.d?`<div class="ed">${e.d}</div>`:''}
-              ${(e.tg&&e.tg.length)?`<div class="etg">${e.tg.map(t=>{
-                if(t==='免費'||t==='自由') return `<span class="tg tf">${t}</span>`;
-                if(t==='必看'||t==='刺激') return `<span class="tg tc">${t}</span>`;
-                if(t==='Pass') return `<span class="tg tp">Pass景點</span>`;
-                return `<span class="tg ta">${t}</span>`;
-              }).join('')}</div>`:''}
-            </div>
-          </div>`).join('')}
-      </div>`;
+    panel.innerHTML='<div class="day-header"><div class="day-badge">'+d.label+'</div><div class="day-title">'+d.title+'</div><div class="day-lbl">'+d.tag+'</div></div><div class="timeline">'+
+      d.ev.map(function(e){
+        var tags='';
+        if(e.tg&&e.tg.length){
+          tags='<div class="etg">'+e.tg.map(function(t){
+            if(t==='免費'||t==='自由') return '<span class="tg tf">'+t+'</span>';
+            if(t==='必看'||t==='刺激') return '<span class="tg tc">'+t+'</span>';
+            if(t==='Pass') return '<span class="tg tp">Pass景點</span>';
+            return '<span class="tg ta">'+t+'</span>';
+          }).join('')+'</div>';
+        }
+        return '<div class="ev '+e.c+'"><div class="et">'+e.t+'</div><div class="eb"><div class="en">'+e.n+'</div>'+(e.d?'<div class="ed">'+e.d+'</div>':'')+tags+'</div></div>';
+      }).join('')+'</div>';
     cont.appendChild(panel);
   });
 }
+
 function switchDay(i){
-  document.querySelectorAll('.hday').forEach((el,j)=>el.classList.toggle('active',j===i));
-  document.querySelectorAll('#dayTabs .tab').forEach((el,j)=>el.classList.toggle('active',j===i));
-  document.querySelectorAll('.day-panel').forEach((el,j)=>el.classList.toggle('active',j===i));
+  document.querySelectorAll('.hday').forEach(function(el,j){el.classList.toggle('active',j===i);});
+  document.querySelectorAll('#dayTabs .tab').forEach(function(el,j){el.classList.toggle('active',j===i);});
+  document.querySelectorAll('.day-panel').forEach(function(el,j){el.classList.toggle('active',j===i);});
 }
 
-// ── AREA ──
-const catEmoji={全部:'🔍',咖啡廳:'☕',餐廳:'🍽',早午餐:'🥐',酒吧:'🍺',景點:'🏛',購物:'🛍'};
-function renderArea(){
-  if(!AP[curArea]) AP[curArea]=[];
-  const places=AP[curArea];
+// ── 地區 ──
+function renderArea(places){
   document.getElementById('areaLabel').textContent=curArea;
-  document.getElementById('statsBar').innerHTML=`
-    <div class="stat"><div class="sn">${places.length}</div><div class="sl">地點總計</div></div>
-    <div class="stat"><div class="sn" style="color:var(--green)">${places.filter(p=>p.pln).length}</div><div class="sl">已排行程</div></div>
-    <div class="stat"><div class="sn" style="color:var(--gold)">${places.filter(p=>p.link).length}</div><div class="sl">Naver連結</div></div>`;
-  const cats=['全部',...new Set(places.map(p=>p.cat))];
-  document.getElementById('catFilter').innerHTML=cats.map(c=>`
-    <div class="cp${curCat===c?' active':''}" onclick="setCat('${c}')">${catEmoji[c]||'•'} ${c}</div>`).join('');
-  const filtered=curCat==='全部'?places:places.filter(p=>p.cat===curCat);
+  var total=places.length;
+  var planned=places.filter(function(p){return p.planned;}).length;
+  var linked=places.filter(function(p){return p.link;}).length;
+  document.getElementById('statsBar').innerHTML=
+    '<div class="stat"><div class="sn">'+total+'</div><div class="sl">地點總計</div></div>'+
+    '<div class="stat"><div class="sn" style="color:var(--green)">'+planned+'</div><div class="sl">已排行程</div></div>'+
+    '<div class="stat"><div class="sn" style="color:var(--gold)">'+linked+'</div><div class="sl">Naver連結</div></div>';
+
+  var cats=['全部'].concat([...new Set(places.map(function(p){return p.cat;}))]);
+  document.getElementById('catFilter').innerHTML=cats.map(function(c){
+    return '<div class="cp'+(curCat===c?' active':'')+'" onclick="setCat(\''+c+'\')">'+(catEmoji[c]||'•')+' '+c+'</div>';
+  }).join('');
+
+  var filtered=curCat==='全部'?places:places.filter(function(p){return p.cat===curCat;});
   if(!filtered.length){
-    document.getElementById('placeList').innerHTML=`<div class="empty"><div class="ei">📭</div><p>這個分類還沒有地點</p></div>`;
-  } else {
-    document.getElementById('placeList').innerHTML=filtered.map(p=>{
-      const ri=places.indexOf(p);
-      return `<div class="pc${p.pln?' pln':''}">
-        <div class="pe">${p.e}</div>
-        <div class="pb">
-          <div class="pn">${p.n}</div>
-          ${p.a?`<div class="paddr">📍 ${p.a}</div>`:''}
-          ${p.h?`<div class="ph">🕐 ${p.h}</div>`:''}
-          <div class="ptg">
-            <span class="pt">${p.cat}</span>
-            ${p.pln?'<span class="pt" style="background:#e8f4ea;color:#3a7a48">✓ 排程中</span>':''}
-            ${p.link?'<span class="pt" style="background:#e0f8ec;color:#03C75A">🔗 Naver</span>':''}
-          </div>
-        </div>
-        <div class="pa2">
-          ${p.link?`<button class="ib ibn" onclick="openN(${ri})">N</button>`:''}
-          <button class="ib ibd" onclick="delP(${ri})">✕</button>
-        </div>
-      </div>`;}).join('');
+    document.getElementById('placeList').innerHTML='<div class="empty"><div class="ei">📭</div><p>這個分類還沒有地點</p></div>';
+    return;
   }
-  // badge
-  const btn=document.getElementById('nb-area');
-  const old=btn.querySelector('.cbg'); if(old) old.remove();
-  const tot=Object.values(AP).flat().filter(p=>p.link).length;
-  if(tot>0){const b=document.createElement('div');b.className='cbg';b.textContent=tot;btn.appendChild(b);}
-}
-function setCat(c){curCat=c;renderArea();}
-function openN(i){const p=AP[curArea][i];if(p&&p.link)window.open(p.link,'_blank');}
-function delP(i){
-  if(!confirm('確定刪除「'+AP[curArea][i].n+'」？')) return;
-  AP[curArea].splice(i,1);
-  saveAP();
-  renderArea();
-  toast('已刪除');
+  document.getElementById('placeList').innerHTML=filtered.map(function(p){
+    return '<div class="pc'+(p.planned?' pln':'')+'">'+
+      '<div class="pe">'+(catEmoji[p.cat]||'📍')+'</div>'+
+      '<div class="pb">'+
+        '<div class="pn">'+p.name+'</div>'+
+        (p.addr?'<div class="paddr">📍 '+p.addr+'</div>':'')+
+        (p.hours?'<div class="ph">🕐 '+p.hours+'</div>':'')+
+        '<div class="ptg">'+
+          '<span class="pt">'+p.cat+'</span>'+
+          (p.planned?'<span class="pt" style="background:#e8f4ea;color:#3a7a48">✓ 排程中</span>':'')+
+          (p.link?'<span class="pt" style="background:#e0f8ec;color:#03C75A">🔗 Naver</span>':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="pa2">'+
+        (p.link?'<button class="ib ibn" onclick="openN(\''+p.link+'\')">N</button>':'')+
+        '<button class="ib ibd" onclick="delP('+p.idx+')">✕</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
 }
 
-// ── ADD ──
+function loadArea(){
+  document.getElementById('placeList').innerHTML='<div class="loading">載入中...</div>';
+  api({action:'getFood', area:curArea}, function(err, data){
+    if(err||!Array.isArray(data)){
+      document.getElementById('placeList').innerHTML='<div class="empty"><div class="ei">⚠️</div><p>載入失敗，請檢查 GAS_URL</p></div>';
+      return;
+    }
+    renderArea(data);
+  });
+}
+
+function setCat(c){curCat=c;loadArea();}
+function openN(link){window.open(link,'_blank');}
+
+function delP(idx){
+  if(!confirm('確定刪除？')) return;
+  api({action:'delFood', idx:idx}, function(err, data){
+    if(err||!data||!data.ok){ toast('刪除失敗'); return; }
+    toast('已刪除');
+    loadArea();
+  });
+}
+
 function addPlace(){
-  const nameEl=document.getElementById('newName');
-  const linkEl=document.getElementById('newLink');
-  const noteEl=document.getElementById('newNote');
-  const typeEl=document.getElementById('newType');
-  const name=nameEl.value.trim();
-  const link=linkEl.value.trim();
-  const note=noteEl.value.trim();
+  var nameEl=document.getElementById('newName');
+  var linkEl=document.getElementById('newLink');
+  var hoursEl=document.getElementById('newHours');
+  var typeEl=document.getElementById('newType');
+  var name=nameEl.value.trim();
+  var link=linkEl.value.trim();
+  var hours=hoursEl.value.trim();
+  var cat=typeEl.value;
+
   if(!name){
     nameEl.style.borderColor='var(--coral)';
     nameEl.focus();
-    setTimeout(()=>nameEl.style.borderColor='',1500);
+    setTimeout(function(){nameEl.style.borderColor='';},1500);
     return;
   }
-  if(link && !link.startsWith('http')){
-    alert('Naver 連結格式有誤，請確認開頭為 https://');
+  if(link&&!link.startsWith('http')){
+    alert('Naver 連結格式有誤');
     linkEl.focus(); return;
   }
-  const catMap={'☕':'咖啡廳','🍽':'餐廳','🍺':'酒吧','🥐':'早午餐','🏛':'景點','🛍':'購物'};
-  if(!AP[curArea]) AP[curArea]=[];
-  AP[curArea].push({e:typeEl.value,n:name,a:note,h:'',cat:catMap[typeEl.value]||'其他',link,pln:false});
-  saveAP();  // ← 立刻寫入 localStorage
-  nameEl.value=''; linkEl.value=''; noteEl.value='';
-  curCat='全部';
-  renderArea();
-  document.getElementById('placeList').scrollIntoView({behavior:'smooth',block:'start'});
-  toast('✅ 已新增「'+name+'」並儲存！');
+
+  toast('新增中...');
+  api({action:'addFood', area:curArea, cat:cat, name:name, hours:hours, link:link}, function(err, data){
+    if(err||!data||!data.ok){ toast('新增失敗 😥'); return; }
+    nameEl.value=''; linkEl.value=''; hoursEl.value='';
+    toast('✅ 已新增「'+name+'」');
+    loadArea();
+  });
 }
 
-// ── UPLOAD ──
-function uploadList(ev){
-  const file=ev.target.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const lines=e.target.result.split('\n').map(l=>l.trim()).filter(Boolean);
-    let added=0;
-    lines.forEach(line=>{
-      const parts=line.split(',');
-      const name=(parts[0]||'').trim();
-      const link=(parts[1]||'').trim();
-      const note=(parts[2]||'').trim();
-      if(!name) return;
-      if(!AP[curArea]) AP[curArea]=[];
-      AP[curArea].push({e:'📍',n:name,a:note,h:'',cat:'其他',link,pln:false});
-      added++;
-    });
-    saveAP();
-    curCat='全部'; renderArea();
-    toast('✅ 已加入 '+added+' 筆並儲存');
-  };
-  reader.readAsText(file,'UTF-8');
-  ev.target.value='';
+function switchArea(el, area){
+  document.querySelectorAll('#areaTabs .tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  curArea=area; curCat='全部';
+  loadArea();
 }
 
-function switchArea(el,area){
-  document.querySelectorAll('#areaTabs .tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active'); curArea=area; curCat='全部'; renderArea();
-}
 function switchPage(page){
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('active');});
   document.getElementById('nb-'+page).classList.add('active');
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.getElementById('pg-'+page).classList.add('active');
-  if(page==='area') renderArea();
+  if(page==='area') loadArea();
 }
 
 initDays();
