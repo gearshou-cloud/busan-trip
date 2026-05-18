@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇰🇷 釜山行程規劃</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+:root{--navy:#1a2035;--cream:#f5f0e8;--coral:#e85d3a;--gold:#c9a84c;--muted:#8a8070;--card:#fff;--border:#e0d8cc;--green:#3a7a48;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;}
+header{background:var(--navy);color:var(--cream);padding:16px 18px 12px;display:flex;align-items:flex-end;justify-content:space-between;}
+.sub{font-size:10px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px;}
+header h1{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:900;}
+.hdays{display:flex;gap:5px;}
+.hday{width:29px;height:29px;border-radius:50%;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;}
+.hday.active{background:var(--coral);border-color:var(--coral);color:#fff;}
+.tabs{display:flex;background:var(--navy);padding:0 16px;border-bottom:2px solid var(--gold);overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:9px 13px;font-size:11px;font-weight:500;color:rgba(255,255,255,.4);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.page{display:none;} .page.active{display:block;}
+.scroller{padding:13px;padding-bottom:80px;}
+.day-panel{display:none;} .day-panel.active{display:block;}
+.day-header{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+.day-badge{background:var(--coral);color:#fff;font-family:'Noto Serif TC',serif;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.day-title{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;flex:1;}
+.day-lbl{font-size:10px;color:var(--muted);background:var(--border);padding:2px 8px;border-radius:10px;}
+.timeline{position:relative;padding-left:18px;}
+.timeline::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--border);}
+.ev{position:relative;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:9px 11px;margin-bottom:6px;display:flex;gap:8px;}
+.ev::before{content:'';position:absolute;left:-14px;top:12px;width:9px;height:9px;border-radius:50%;background:var(--gold);border:2px solid var(--cream);}
+.ev.hl::before{background:var(--coral);}
+.ev.ml::before{background:#5a9e6a;}
+.ev.fr::before{background:var(--muted);}
+.et{font-size:10px;color:var(--muted);min-width:34px;margin-top:2px;font-weight:500;}
+.eb{flex:1;}
+.en{font-size:12px;font-weight:500;margin-bottom:1px;}
+.ed{font-size:11px;color:var(--muted);line-height:1.5;}
+.etg{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px;}
+.tg{font-size:9px;padding:2px 6px;border-radius:8px;font-weight:500;}
+.tf{background:#e8f4ea;color:#3a7a48;} .ta{background:#f0ebe0;color:var(--muted);}
+.tc{background:#fff0ec;color:var(--coral);} .tp{background:#fdf5e0;color:#9a7a20;}
+.area-scroller{padding:13px;padding-bottom:80px;}
+.stats{display:flex;gap:6px;margin-bottom:10px;}
+.stat{flex:1;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:9px 10px;text-align:center;}
+.sn{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;}
+.sl{font-size:9px;color:var(--muted);margin-top:1px;}
+.cf{display:flex;gap:5px;margin-bottom:9px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.cf::-webkit-scrollbar{display:none;}
+.cp{padding:4px 10px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--muted);white-space:nowrap;transition:all .2s;}
+.cp.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.sec{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:10px 0 6px;}
+.pl{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:flex-start;gap:9px;}
+.pc.pln{border-left:3px solid var(--green);}
+.pe{font-size:18px;flex-shrink:0;margin-top:1px;}
+.pb{flex:1;min-width:0;}
+.pn{font-size:12px;font-weight:600;color:var(--navy);}
+.paddr{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4;}
+.ph{font-size:10px;color:#5a9e6a;margin-top:1px;}
+.ptg{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
+.pt{font-size:9px;padding:1px 6px;border-radius:6px;font-weight:500;background:#f0ebe0;color:var(--muted);}
+.pa2{display:flex;gap:5px;flex-shrink:0;padding-top:2px;}
+.ib{width:28px;height:28px;border-radius:7px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .15s;}
+.ibn{background:#03C75A;color:#fff;font-size:10px;}
+.ibd{background:#f5f0e8;color:#cc4433;}
+.add-box{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:10px;}
+.add-box h3{font-size:12px;font-weight:600;margin-bottom:10px;color:var(--navy);}
+.fl{font-size:10px;color:var(--muted);margin-bottom:3px;margin-top:8px;}
+.fl:first-of-type{margin-top:0;}
+.ir{display:flex;gap:6px;}
+.inp{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 10px;font-size:13px;font-family:'Noto Sans TC',sans-serif;color:var(--navy);background:#faf7f2;outline:none;transition:border-color .2s;}
+.inp:focus{border-color:var(--gold);background:#fff;}
+.sel{border:1.5px solid var(--border);border-radius:8px;padding:9px 8px;font-size:12px;font-family:'Noto Sans TC',sans-serif;color:var(--navy);background:#faf7f2;outline:none;flex-shrink:0;}
+.btn-add{width:100%;padding:11px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;border:none;background:var(--navy);color:#fff;margin-top:10px;letter-spacing:.04em;transition:background .2s;}
+.btn-add:hover{background:#2a3045;}
+.btn-add:active{background:var(--coral);}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#1a2035ee;color:#fff;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:500;z-index:1000;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;}
+.ubox{border:1.5px dashed var(--border);border-radius:8px;padding:12px;text-align:center;cursor:pointer;margin-top:8px;transition:all .2s;}
+.ubox:hover{border-color:var(--gold);background:#fdf8ee;}
+.ubox p{font-size:10px;color:var(--muted);margin-top:3px;}
+.fmt{font-size:9px;color:#bbb;font-family:monospace;margin-top:3px;}
+.hint{font-size:10px;color:var(--muted);background:#f8f4ec;border:1px solid var(--border);border-radius:8px;padding:9px 11px;line-height:1.7;margin-top:8px;}
+.save-note{font-size:10px;color:var(--green);text-align:center;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:4px;}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--navy);display:flex;border-top:2px solid rgba(255,255,255,.1);z-index:999;}
+.nb{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:rgba(255,255,255,.4);font-size:9px;font-weight:500;position:relative;transition:color .2s;}
+.nb.active{color:var(--gold);}
+.nb .ico{font-size:17px;}
+.cbg{position:absolute;top:5px;right:20%;background:var(--coral);color:#fff;font-size:8px;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;padding:0 3px;}
+.empty{text-align:center;padding:24px;color:var(--muted);}
+.empty .ei{font-size:26px;margin-bottom:6px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="sub">Employee Trip · 釜山五日遊</div>
+    <h1>🇰🇷 釜山行程規劃</h1>
+  </div>
+  <div class="hdays" id="dayNav"></div>
+</header>
+
+<div id="pg-itin" class="page active">
+  <div class="tabs" id="dayTabs"></div>
+  <div class="scroller" id="dayContent"></div>
+</div>
+
+<div id="pg-area" class="page">
+  <div class="tabs" id="areaTabs">
+    <div class="tab active" onclick="switchArea(this,'廣安里')">廣安里</div>
+    <div class="tab" onclick="switchArea(this,'西面')">西面</div>
+    <div class="tab" onclick="switchArea(this,'影島')">影島</div>
+    <div class="tab" onclick="switchArea(this,'南浦')">南浦</div>
+    <div class="tab" onclick="switchArea(this,'海雲台')">海雲台</div>
+  </div>
+  <div class="area-scroller">
+    <div class="stats" id="statsBar"></div>
+    <div class="cf" id="catFilter"></div>
+    <div class="sec">📍 地點清單</div>
+    <div class="pl" id="placeList"></div>
+    <div class="add-box">
+      <h3>➕ 新增到「<span id="areaLabel">廣安里</span>」</h3>
+      <div class="fl">① 名稱</div>
+      <div class="ir">
+        <input class="inp" id="newName" placeholder="咖啡廳 / 餐廳 / 景點名稱" autocomplete="off">
+        <select class="sel" id="newType">
+          <option value="☕">咖啡廳</option>
+          <option value="🍽">餐廳</option>
+          <option value="🍺">酒吧</option>
+          <option value="🥐">早午餐</option>
+          <option value="🏛">景點</option>
+          <option value="🛍">購物</option>
+        </select>
+      </div>
+      <div class="fl">② Naver Map 連結（可選）</div>
+      <input class="inp" id="newLink" placeholder="https://naver.me/..." autocomplete="off">
+      <div class="fl">③ 備註（地址 / 營業時間，可選）</div>
+      <input class="inp" id="newNote" placeholder="例：수영구 광안로 58｜17:00–02:00" autocomplete="off">
+      <button class="btn-add" onclick="addPlace()">✓ 新增地點</button>
+      <div class="save-note">💾 資料自動儲存到瀏覽器，關掉重開都還在</div>
+      <div class="ubox" onclick="document.getElementById('fi').click()">
+        <div style="font-size:20px">📋</div>
+        <p>批次上傳清單（.txt）</p>
+        <div class="fmt">格式：名稱,https://naver.me/xxx,備註（每行一筆）</div>
+      </div>
+      <input type="file" id="fi" accept=".txt" style="display:none" onchange="uploadList(event)">
+    </div>
+    <div class="hint">💡 <strong>如何取得 Naver 連結？</strong><br>手機 App → 找到地點 → 右上角「공유（分享）」→ 複製連結</div>
+  </div>
+</div>
+
+<div class="bnav">
+  <div class="nb active" id="nb-itin" onclick="switchPage('itin')"><span class="ico">📅</span><span>行程</span></div>
+  <div class="nb" id="nb-area" onclick="switchPage('area')"><span class="ico">🗺</span><span>地區</span></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STORAGE KEY ──
+const STORE_KEY = 'busan_ap_v1';
+
+// ── DEFAULT DATA ──
+const DEFAULT_AP = {
+  '廣安里':[
+    {e:'🍪',n:'My Favorite Cookie',a:'수영구 광남로 103',h:'',cat:'咖啡廳',link:'',pln:false},
+    {e:'🥩',n:'언양불고기부산집본가',a:'수영구 남천바다로33번길 8',h:'11:00–22:00',cat:'餐廳',link:'',pln:false},
+    {e:'🍗',n:'아웃닭 광안점',a:'수영구 광안로 58・廣安站5號口步行8分',h:'17:00–02:00',cat:'餐廳',link:'',pln:false},
+    {e:'🥯',n:'All Sunday Bagel',a:'廣安里海灘旁',h:'',cat:'咖啡廳',link:'',pln:false},
+    {e:'🪖',n:'HELMET（Brunch）',a:'수영구 수영로554번가길 22 1-2층',h:'09:00–19:00（L.O.18:30）',cat:'早午餐',link:'',pln:false},
+    {e:'☕',n:'LAKE COFFEE BAR',a:'廣安站',h:'',cat:'咖啡廳',link:'',pln:false},
+    {e:'🌊',n:'廣安里海灘',a:'廣安大橋夜景聖地',h:'',cat:'景點',link:'',pln:true},
+    {e:'🏔',n:'荒嶺山烽火台',a:'360°全景制高點・免費',h:'',cat:'景點',link:'',pln:true},
+    {e:'🎵',n:'Millac the Market',a:'廣安里旁・面橋夜景',h:'10:00–00:00',cat:'景點',link:'',pln:true},
+  ],
+  '西面':[
+    {e:'🍜',n:'英子麵店 영자면옥',a:'西面站15號出口步行3分鐘',h:'',cat:'餐廳',link:'',pln:false},
+    {e:'🍚',n:'濟州家海鮮粥 西面店',a:'西面',h:'',cat:'餐廳',link:'',pln:false},
+    {e:'🥐',n:'No Baker No Bakers',a:'田浦咖啡街・Jeonpo-daero 227',h:'09:00–22:30',cat:'咖啡廳',link:'',pln:false},
+    {e:'🥗',n:'Soup or Salad（Brunch）',a:'田浦站步行4分・부산진구 동성로 39번길 7',h:'09:00–18:00',cat:'早午餐',link:'',pln:false},
+    {e:'🍞',n:'Toi et moi（法式吐司）',a:'田浦',h:'',cat:'咖啡廳',link:'',pln:false},
+    {e:'🍳',n:'HASH TABLE 해쉬테이블',a:'田浦洞 205-10',h:'平日 09:30–18:00・日 09:00–16:00',cat:'早午餐',link:'',pln:false},
+    {e:'🥞',n:'OH! CREPR',a:'西面',h:'',cat:'咖啡廳',link:'',pln:false},
+    {e:'🧋',n:'Franklin 咖啡',a:'田浦洞 354-1',h:'',cat:'咖啡廳',link:'',pln:false},
+    {e:'🌿',n:'老花園 올드맨션',a:'田浦站7號出口・부산진구 전포대로209번길 17-6',h:'',cat:'咖啡廳',link:'',pln:false},
+    {e:'🍺',n:'歐巴大排檔 아는오빠',a:'부산진구 동천로 85번길 7',h:'18:00–04:00',cat:'酒吧',link:'',pln:false},
+  ],
+  '影島':[
+    {e:'🎨',n:'白淺灘文化村',a:'影島區',h:'24小時・免費',cat:'景點',link:'',pln:true},
+    {e:'☕',n:'Go Slow 咖啡廳',a:'白淺灘文化村內',h:'11:00–22:00',cat:'咖啡廳',link:'',pln:true},
+    {e:'🚶',n:'絕影海岸散步路',a:'影島區',h:'24小時',cat:'景點',link:'',pln:true},
+    {e:'🌉',n:'影島大橋開橋秀',a:'每天14:00・限時15分鐘',h:'',cat:'景點',link:'',pln:true},
+    {e:'🦑',n:'影島海女村',a:'影島區',h:'',cat:'餐廳',link:'',pln:true},
+  ],
+  '南浦':[
+    {e:'🎡',n:'甘川洞文化村',a:'',h:'',cat:'景點',link:'',pln:true},
+    {e:'🎪',n:'富平罐頭市場',a:'',h:'',cat:'景點',link:'',pln:true},
+    {e:'🐟',n:'札嘎其市場',a:'',h:'09:00–21:00',cat:'餐廳',link:'',pln:false},
+    {e:'🏰',n:'釜山塔',a:'龍頭山公園',h:'',cat:'景點',link:'',pln:false},
+  ],
+  '海雲台':[
+    {e:'🎨',n:'Arte Museum',a:'',h:'',cat:'景點',link:'',pln:true},
+    {e:'🚃',n:'天空膠囊列車',a:'',h:'',cat:'景點',link:'',pln:true},
+    {e:'🏯',n:'海東龍宮寺',a:'',h:'',cat:'景點',link:'',pln:true},
+    {e:'🛍',n:'樂天 Outlet',a:'',h:'',cat:'購物',link:'',pln:true},
+    {e:'🎢',n:'Skyline Luge',a:'',h:'',cat:'景點',link:'',pln:true},
+    {e:'🌊',n:'海理團路',a:'海雲台站4號出口',h:'',cat:'景點',link:'',pln:false},
+  ],
+};
+
+// ── LOAD / SAVE ──
+function loadAP(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_AP));
+  }catch(e){
+    return JSON.parse(JSON.stringify(DEFAULT_AP));
+  }
+}
+function saveAP(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(AP)); }
+  catch(e){ console.warn('儲存失敗',e); }
+}
+
+let AP = loadAP();
+let curArea='廣安里', curCat='全部';
+
+// ── DAYS DATA ──
+const DAYS=[
+  {label:'Day 1',title:'抵達釜山',tag:'傍晚抵達',ev:[
+    {t:'出發',n:'公司專車→桃園機場',d:'贈轉接頭＋網卡',c:''},
+    {t:'晚上',n:'富平罐頭夜市',d:'旅行社招待糖餅 🥞',c:'hl',tg:['南浦','免費']},
+    {t:'晚餐',n:'釜山道地豬肉湯飯',d:'🍲',c:'ml'},
+    {t:'住宿',n:'NORTHHARBOR HOTEL',d:'',c:'fr'},
+  ]},
+  {label:'Day 2',title:'Arte Museum & 膠囊列車',tag:'行程豐富',ev:[
+    {t:'早',n:'飯店早餐',d:'',c:'ml'},
+    {t:'上午',n:'ARTE MUSEUM',d:'世界最大沉浸式媒體藝術展',c:'hl',tg:['海雲台','Pass']},
+    {t:'上午',n:'海岸天空膠囊列車',d:'IG 熱門・4人一車廂',c:'hl',tg:['海雲台','Pass']},
+    {t:'下午',n:'青沙浦紅白燈塔',d:'韓星孔劉推薦景點',c:'',tg:['海雲台']},
+    {t:'下午',n:'青沙浦踏石天空步道',d:'透明玻璃步道',c:'',tg:['海雲台']},
+    {t:'午餐',n:'鳳雛-安東粉絲燉雞',d:'🍗',c:'ml'},
+    {t:'晚餐',n:'海雲台貝殼一號店',d:'海鮮火烤兩吃+起司+刀削麵 🦞',c:'ml'},
+  ]},
+  {label:'Day 3',title:'SKY LUGE & 海東龍宮寺',tag:'刺激體驗',ev:[
+    {t:'早',n:'飯店早餐',d:'',c:'ml'},
+    {t:'上午',n:'Skyline Luge 斜坡滑車',d:'每人體驗兩次！',c:'hl',tg:['Pass','刺激']},
+    {t:'下午',n:'海東龍宮寺',d:'釜山最美海景寺廟',c:'',tg:['海雲台']},
+    {t:'下午',n:'樂天 Outlet',d:'超市＋影城＋購物中心',c:'',tg:['海雲台']},
+    {t:'午餐',n:'韓國烤魚定食',d:'🐟',c:'ml'},
+    {t:'晚餐',n:'自由時間 🌙',d:'可自行安排！',c:'fr',tg:['自由']},
+  ]},
+  {label:'Day 4',title:'全日自由活動',tag:'全日自由 🎉',ev:[
+    {t:'早',n:'飯店早餐',d:'',c:'ml'},
+    {t:'09:30',n:'白淺灘文化村',d:'影島海岸文青小村・14條小巷・免費',c:'',tg:['影島','免費']},
+    {t:'10:45',n:'Go Slow 海景咖啡廳',d:'4.7⭐ 白淺灘村內評分最高',c:'',tg:['影島','咖啡廳']},
+    {t:'11:45',n:'絕影海岸散步路',d:'沿懸崖步道吹海風',c:'',tg:['影島','免費']},
+    {t:'13:45',n:'⚡ 影島大橋開橋秀',d:'每天14:00限定15分鐘！提前卡位',c:'hl',tg:['南浦','必看']},
+    {t:'14:30',n:'影島海女村（午餐）',d:'現撈海鮮，可在岩石邊野餐',c:'ml',tg:['影島']},
+    {t:'16:30',n:'🏔 荒嶺山烽火台',d:'免費！360°全景。搭計程車到停車場再步行15分',c:'hl',tg:['廣安里','免費','夕陽']},
+    {t:'18:30',n:'廣安里海灘',d:'廣安大橋日落黃金時段',c:'',tg:['廣安里']},
+    {t:'20:00',n:'Millac the Market',d:'面橋夜景 + Live Music',c:'',tg:['廣安里']},
+  ]},
+  {label:'Day 5',title:'甘川洞 & 返台',tag:'返回台灣',ev:[
+    {t:'早',n:'飯店早餐',d:'',c:'ml'},
+    {t:'上午',n:'甘川洞文化村',d:'Running Man 拍攝地',c:'hl',tg:['南浦','Pass']},
+    {t:'午餐',n:'紫菜飯捲+飲料',d:'機上不提供餐食',c:'ml'},
+    {t:'下午',n:'釜山機場出發 ✈️',d:'',c:'fr'},
+  ]},
+];
+
+// ── TOAST ──
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2000);
+}
+
+// ── DAYS ──
+function initDays(){
+  const nav=document.getElementById('dayNav');
+  const tabs=document.getElementById('dayTabs');
+  const cont=document.getElementById('dayContent');
+  DAYS.forEach((d,i)=>{
+    const dot=document.createElement('div');
+    dot.className='hday'+(i===0?' active':'');
+    dot.textContent=i+1; dot.onclick=()=>switchDay(i);
+    nav.appendChild(dot);
+    const tab=document.createElement('div');
+    tab.className='tab'+(i===0?' active':'');
+    tab.textContent=d.label; tab.onclick=()=>switchDay(i);
+    tabs.appendChild(tab);
+    const panel=document.createElement('div');
+    panel.className='day-panel'+(i===0?' active':'');
+    panel.innerHTML=`
+      <div class="day-header">
+        <div class="day-badge">${d.label}</div>
+        <div class="day-title">${d.title}</div>
+        <div class="day-lbl">${d.tag}</div>
+      </div>
+      <div class="timeline">
+        ${d.ev.map(e=>`
+          <div class="ev ${e.c}">
+            <div class="et">${e.t}</div>
+            <div class="eb">
+              <div class="en">${e.n}</div>
+              ${e.d?`<div class="ed">${e.d}</div>`:''}
+              ${(e.tg&&e.tg.length)?`<div class="etg">${e.tg.map(t=>{
+                if(t==='免費'||t==='自由') return `<span class="tg tf">${t}</span>`;
+                if(t==='必看'||t==='刺激') return `<span class="tg tc">${t}</span>`;
+                if(t==='Pass') return `<span class="tg tp">Pass景點</span>`;
+                return `<span class="tg ta">${t}</span>`;
+              }).join('')}</div>`:''}
+            </div>
+          </div>`).join('')}
+      </div>`;
+    cont.appendChild(panel);
+  });
+}
+function switchDay(i){
+  document.querySelectorAll('.hday').forEach((el,j)=>el.classList.toggle('active',j===i));
+  document.querySelectorAll('#dayTabs .tab').forEach((el,j)=>el.classList.toggle('active',j===i));
+  document.querySelectorAll('.day-panel').forEach((el,j)=>el.classList.toggle('active',j===i));
+}
+
+// ── AREA ──
+const catEmoji={全部:'🔍',咖啡廳:'☕',餐廳:'🍽',早午餐:'🥐',酒吧:'🍺',景點:'🏛',購物:'🛍'};
+function renderArea(){
+  if(!AP[curArea]) AP[curArea]=[];
+  const places=AP[curArea];
+  document.getElementById('areaLabel').textContent=curArea;
+  document.getElementById('statsBar').innerHTML=`
+    <div class="stat"><div class="sn">${places.length}</div><div class="sl">地點總計</div></div>
+    <div class="stat"><div class="sn" style="color:var(--green)">${places.filter(p=>p.pln).length}</div><div class="sl">已排行程</div></div>
+    <div class="stat"><div class="sn" style="color:var(--gold)">${places.filter(p=>p.link).length}</div><div class="sl">Naver連結</div></div>`;
+  const cats=['全部',...new Set(places.map(p=>p.cat))];
+  document.getElementById('catFilter').innerHTML=cats.map(c=>`
+    <div class="cp${curCat===c?' active':''}" onclick="setCat('${c}')">${catEmoji[c]||'•'} ${c}</div>`).join('');
+  const filtered=curCat==='全部'?places:places.filter(p=>p.cat===curCat);
+  if(!filtered.length){
+    document.getElementById('placeList').innerHTML=`<div class="empty"><div class="ei">📭</div><p>這個分類還沒有地點</p></div>`;
+  } else {
+    document.getElementById('placeList').innerHTML=filtered.map(p=>{
+      const ri=places.indexOf(p);
+      return `<div class="pc${p.pln?' pln':''}">
+        <div class="pe">${p.e}</div>
+        <div class="pb">
+          <div class="pn">${p.n}</div>
+          ${p.a?`<div class="paddr">📍 ${p.a}</div>`:''}
+          ${p.h?`<div class="ph">🕐 ${p.h}</div>`:''}
+          <div class="ptg">
+            <span class="pt">${p.cat}</span>
+            ${p.pln?'<span class="pt" style="background:#e8f4ea;color:#3a7a48">✓ 排程中</span>':''}
+            ${p.link?'<span class="pt" style="background:#e0f8ec;color:#03C75A">🔗 Naver</span>':''}
+          </div>
+        </div>
+        <div class="pa2">
+          ${p.link?`<button class="ib ibn" onclick="openN(${ri})">N</button>`:''}
+          <button class="ib ibd" onclick="delP(${ri})">✕</button>
+        </div>
+      </div>`;}).join('');
+  }
+  // badge
+  const btn=document.getElementById('nb-area');
+  const old=btn.querySelector('.cbg'); if(old) old.remove();
+  const tot=Object.values(AP).flat().filter(p=>p.link).length;
+  if(tot>0){const b=document.createElement('div');b.className='cbg';b.textContent=tot;btn.appendChild(b);}
+}
+function setCat(c){curCat=c;renderArea();}
+function openN(i){const p=AP[curArea][i];if(p&&p.link)window.open(p.link,'_blank');}
+function delP(i){
+  if(!confirm('確定刪除「'+AP[curArea][i].n+'」？')) return;
+  AP[curArea].splice(i,1);
+  saveAP();
+  renderArea();
+  toast('已刪除');
+}
+
+// ── ADD ──
+function addPlace(){
+  const nameEl=document.getElementById('newName');
+  const linkEl=document.getElementById('newLink');
+  const noteEl=document.getElementById('newNote');
+  const typeEl=document.getElementById('newType');
+  const name=nameEl.value.trim();
+  const link=linkEl.value.trim();
+  const note=noteEl.value.trim();
+  if(!name){
+    nameEl.style.borderColor='var(--coral)';
+    nameEl.focus();
+    setTimeout(()=>nameEl.style.borderColor='',1500);
+    return;
+  }
+  if(link && !link.startsWith('http')){
+    alert('Naver 連結格式有誤，請確認開頭為 https://');
+    linkEl.focus(); return;
+  }
+  const catMap={'☕':'咖啡廳','🍽':'餐廳','🍺':'酒吧','🥐':'早午餐','🏛':'景點','🛍':'購物'};
+  if(!AP[curArea]) AP[curArea]=[];
+  AP[curArea].push({e:typeEl.value,n:name,a:note,h:'',cat:catMap[typeEl.value]||'其他',link,pln:false});
+  saveAP();  // ← 立刻寫入 localStorage
+  nameEl.value=''; linkEl.value=''; noteEl.value='';
+  curCat='全部';
+  renderArea();
+  document.getElementById('placeList').scrollIntoView({behavior:'smooth',block:'start'});
+  toast('✅ 已新增「'+name+'」並儲存！');
+}
+
+// ── UPLOAD ──
+function uploadList(ev){
+  const file=ev.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const lines=e.target.result.split('\n').map(l=>l.trim()).filter(Boolean);
+    let added=0;
+    lines.forEach(line=>{
+      const parts=line.split(',');
+      const name=(parts[0]||'').trim();
+      const link=(parts[1]||'').trim();
+      const note=(parts[2]||'').trim();
+      if(!name) return;
+      if(!AP[curArea]) AP[curArea]=[];
+      AP[curArea].push({e:'📍',n:name,a:note,h:'',cat:'其他',link,pln:false});
+      added++;
+    });
+    saveAP();
+    curCat='全部'; renderArea();
+    toast('✅ 已加入 '+added+' 筆並儲存');
+  };
+  reader.readAsText(file,'UTF-8');
+  ev.target.value='';
+}
+
+function switchArea(el,area){
+  document.querySelectorAll('#areaTabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active'); curArea=area; curCat='全部'; renderArea();
+}
+function switchPage(page){
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nb-'+page).classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pg-'+page).classList.add('active');
+  if(page==='area') renderArea();
+}
+
+initDays();
+</script>
+</body>
+</html>
