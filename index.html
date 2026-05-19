@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇰🇷 釜山行程規劃</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+:root{--navy:#1a2035;--cream:#f5f0e8;--coral:#e85d3a;--gold:#c9a84c;--muted:#8a8070;--card:#fff;--border:#e0d8cc;--green:#3a7a48;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--navy);min-height:100vh;}
+header{background:var(--navy);color:var(--cream);padding:16px 18px 12px;display:flex;align-items:flex-end;justify-content:space-between;}
+.sub{font-size:10px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px;}
+header h1{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:900;}
+.hdays{display:flex;gap:5px;}
+.hday{width:29px;height:29px;border-radius:50%;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;}
+.hday.active{background:var(--coral);border-color:var(--coral);color:#fff;}
+.tabs{display:flex;background:var(--navy);padding:0 16px;border-bottom:2px solid var(--gold);overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:9px 13px;font-size:11px;font-weight:500;color:rgba(255,255,255,.4);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.page{display:none;} .page.active{display:block;}
+.scroller{padding:13px;padding-bottom:80px;}
+.day-panel{display:none;} .day-panel.active{display:block;}
+.day-header{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+.day-badge{background:var(--coral);color:#fff;font-family:'Noto Serif TC',serif;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.day-title{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;flex:1;}
+.day-lbl{font-size:10px;color:var(--muted);background:var(--border);padding:2px 8px;border-radius:10px;}
+.timeline{position:relative;padding-left:18px;}
+.timeline::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--border);}
+.ev{position:relative;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:9px 11px;margin-bottom:6px;display:flex;gap:8px;}
+.ev::before{content:'';position:absolute;left:-14px;top:12px;width:9px;height:9px;border-radius:50%;background:var(--gold);border:2px solid var(--cream);}
+.ev.hl::before{background:var(--coral);}
+.ev.ml::before{background:#5a9e6a;}
+.ev.fr::before{background:var(--muted);}
+.et{font-size:10px;color:var(--muted);min-width:34px;margin-top:2px;font-weight:500;}
+.eb{flex:1;}
+.en{font-size:12px;font-weight:500;margin-bottom:1px;}
+.ed{font-size:11px;color:var(--muted);line-height:1.5;}
+.etg{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px;}
+.tg{font-size:9px;padding:2px 6px;border-radius:8px;font-weight:500;}
+.tf{background:#e8f4ea;color:#3a7a48;} .ta{background:#f0ebe0;color:var(--muted);}
+.tc{background:#fff0ec;color:var(--coral);} .tp{background:#fdf5e0;color:#9a7a20;}
+/* area */
+.area-scroller{padding:13px;padding-bottom:80px;}
+.stats{display:flex;gap:6px;margin-bottom:10px;}
+.stat{flex:1;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:9px 10px;text-align:center;}
+.sn{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:700;}
+.sl{font-size:9px;color:var(--muted);margin-top:1px;}
+.cf{display:flex;gap:5px;margin-bottom:9px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.cf::-webkit-scrollbar{display:none;}
+.cp{padding:4px 10px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--muted);white-space:nowrap;transition:all .2s;}
+.cp.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.sec{font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:10px 0 6px;}
+.pl{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:flex-start;gap:9px;}
+.pc.pln{border-left:3px solid var(--green);}
+.pe{font-size:18px;flex-shrink:0;margin-top:1px;}
+.pb{flex:1;min-width:0;}
+.pn{font-size:12px;font-weight:600;color:var(--navy);}
+.paddr{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4;}
+.ph{font-size:10px;color:#5a9e6a;margin-top:1px;}
+.ptg{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
+.pt{font-size:9px;padding:1px 6px;border-radius:6px;font-weight:500;background:#f0ebe0;color:var(--muted);}
+.pa2{display:flex;gap:5px;flex-shrink:0;padding-top:2px;}
+.ib{width:28px;height:28px;border-radius:7px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .15s;}
+.ibn{background:#03C75A;color:#fff;font-size:10px;}
+.ibd{background:#f5f0e8;color:#cc4433;}
+.add-box{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:10px;}
+.add-box h3{font-size:12px;font-weight:600;margin-bottom:10px;color:var(--navy);}
+.fl{font-size:10px;color:var(--muted);margin-bottom:3px;margin-top:8px;}
+.ir{display:flex;gap:6px;}
+.inp{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 10px;font-size:13px;font-family:'Noto Sans TC',sans-serif;color:var(--navy);background:#faf7f2;outline:none;transition:border-color .2s;}
+.inp:focus{border-color:var(--gold);background:#fff;}
+.sel{border:1.5px solid var(--border);border-radius:8px;padding:9px 8px;font-size:12px;font-family:'Noto Sans TC',sans-serif;color:var(--navy);background:#faf7f2;outline:none;flex-shrink:0;}
+.btn-add{width:100%;padding:11px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;border:none;background:var(--navy);color:#fff;margin-top:10px;transition:background .2s;}
+.btn-add:active{background:var(--coral);}
+.hint{font-size:10px;color:var(--muted);background:#f8f4ec;border:1px solid var(--border);border-radius:8px;padding:9px 11px;line-height:1.7;margin-top:8px;}
+.sync-note{font-size:10px;color:var(--green);text-align:center;margin-top:6px;}
+.loading{text-align:center;padding:24px;color:var(--muted);font-size:12px;}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#1a2035ee;color:#fff;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:500;z-index:1000;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--navy);display:flex;border-top:2px solid rgba(255,255,255,.1);z-index:999;}
+.nb{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:rgba(255,255,255,.4);font-size:9px;font-weight:500;position:relative;transition:color .2s;}
+.nb.active{color:var(--gold);}
+.nb .ico{font-size:17px;}
+.empty{text-align:center;padding:24px;color:var(--muted);}
+.empty .ei{font-size:26px;margin-bottom:6px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="sub">Employee Trip · 釜山五日遊</div>
+    <h1>🇰🇷 釜山行程規劃</h1>
+  </div>
+  <div class="hdays" id="dayNav"></div>
+</header>
+
+<div id="pg-itin" class="page active">
+  <div class="tabs" id="dayTabs"></div>
+  <div class="scroller" id="dayContent"></div>
+</div>
+
+<div id="pg-area" class="page">
+  <div class="tabs" id="areaTabs">
+    <div class="tab active" onclick="switchArea(this,'廣安里')">廣安里</div>
+    <div class="tab" onclick="switchArea(this,'西面')">西面</div>
+    <div class="tab" onclick="switchArea(this,'影島')">影島</div>
+    <div class="tab" onclick="switchArea(this,'南浦')">南浦</div>
+    <div class="tab" onclick="switchArea(this,'海雲台')">海雲台</div>
+  </div>
+  <div class="area-scroller">
+    <div class="stats" id="statsBar"></div>
+    <div class="cf" id="catFilter"></div>
+    <div class="sec">📍 地點清單</div>
+    <div class="pl" id="placeList"><div class="loading">載入中...</div></div>
+
+    <div class="add-box">
+      <h3>➕ 新增到「<span id="areaLabel">廣安里</span>」</h3>
+      <div class="fl">① 名稱</div>
+      <div class="ir">
+        <input class="inp" id="newName" placeholder="咖啡廳 / 餐廳 / 景點名稱" autocomplete="off">
+        <select class="sel" id="newType">
+          <option value="咖啡廳">☕ 咖啡廳</option>
+          <option value="燒肉">🥩 燒肉</option>
+          <option value="海鮮">🦞 海鮮</option>
+          <option value="甜點">🍰 甜點</option>
+          <option value="小吃">🍢 小吃</option>
+          <option value="景點">🏛 景點</option>
+          <option value="其他">🍽 其他</option>
+        </select>
+      </div>
+      <div class="fl">② Naver Map 連結（可選）</div>
+      <input class="inp" id="newLink" placeholder="https://naver.me/..." autocomplete="off">
+      <div class="fl">③ 營業時間（可選）</div>
+      <input class="inp" id="newHours" placeholder="例：11:00–22:00" autocomplete="off" type="text">
+      <div class="fl">④ 備註（可選）</div>
+      <input class="inp" id="newNote" placeholder="例：需要預約、限量供應" autocomplete="off" type="text">
+      <button class="btn-add" onclick="addPlace()">✓ 新增地點</button>
+      <div class="sync-note">☁️ 資料同步自 Google Sheets，所有裝置共享</div>
+    </div>
+    <div class="hint">💡 Naver Map App → 找到地點 → 右上角「공유」→ 複製連結</div>
+  </div>
+</div>
+
+
+<div id="pg-shop" class="page">
+  <div class="tabs" id="shopModeTabs">
+    <div class="tab active" onclick="switchShopMode(this,'store')">🏪 購物店家</div>
+    <div class="tab" onclick="switchShopMode(this,'wish')">🛒 待買清單</div>
+  </div>
+
+  <!-- 購物店家 -->
+  <div id="shop-store">
+    <div class="tabs" id="shopTabs" style="background:#2a3045">
+      <div class="tab active" onclick="switchShopArea(this,'廣安里')">廣安里</div>
+      <div class="tab" onclick="switchShopArea(this,'西面')">西面</div>
+      <div class="tab" onclick="switchShopArea(this,'影島')">影島</div>
+      <div class="tab" onclick="switchShopArea(this,'南浦')">南浦</div>
+      <div class="tab" onclick="switchShopArea(this,'海雲台')">海雲台</div>
+      <div class="tab" onclick="switchShopArea(this,'')">全部</div>
+    </div>
+    <div class="area-scroller">
+      <div class="sec">🏪 購物店家</div>
+      <div class="pl" id="shopList"><div class="loading">載入中...</div></div>
+      <div class="add-box">
+        <h3>➕ 新增購物店家</h3>
+        <div class="fl">① 地區</div>
+        <select class="sel" id="shopArea" style="width:100%">
+          <option value="廣安里">廣安里</option>
+          <option value="西面">西面</option>
+          <option value="影島">影島</option>
+          <option value="南浦">南浦</option>
+          <option value="海雲台">海雲台</option>
+        </select>
+        <div class="fl">② 店家名稱</div>
+        <input class="inp" id="shopName" placeholder="例：Olive Young" autocomplete="off" type="text">
+        <div class="fl">③ 營業時間（可選）</div>
+        <input class="inp" id="shopHours" placeholder="例：10:00–22:00" autocomplete="off" type="text">
+        <div class="fl">④ Naver Map 連結（可選）</div>
+        <input class="inp" id="shopLink" placeholder="https://naver.me/..." autocomplete="off" type="text">
+        <button class="btn-add" onclick="addShop()">✓ 新增店家</button>
+        <div class="sync-note">☁️ 資料同步自 Google Sheets</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 待買清單 -->
+  <div id="shop-wish" style="display:none">
+    <div class="area-scroller">
+      <div class="sec">🛒 待買清單</div>
+      <div class="pl" id="wishList"><div class="loading">載入中...</div></div>
+      <div class="add-box">
+        <h3>➕ 新增待買品項</h3>
+        <div class="fl">① 店家</div>
+        <input class="inp" id="wishShop" placeholder="例：Olive Young" autocomplete="off" type="text">
+        <div class="fl">② 品項名稱</div>
+        <input class="inp" id="wishItem" placeholder="例：羅氏護手霜" autocomplete="off" type="text">
+        <div class="fl">③ 備註（可選）</div>
+        <input class="inp" id="wishNote" placeholder="例：買兩個" autocomplete="off" type="text">
+        <button class="btn-add" onclick="addWish()">✓ 新增品項</button>
+        <div class="sync-note">☁️ 資料同步自 Google Sheets</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bnav">
+  <div class="nb active" id="nb-itin" onclick="switchPage('itin')"><span class="ico">📅</span><span>行程</span></div>
+  <div class="nb" id="nb-area" onclick="switchPage('area')"><span class="ico">🗺</span><span>地區</span></div>
+  <div class="nb" id="nb-shop" onclick="switchPage('shop')"><span class="ico">🛍</span><span>購物</span></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ⚠️ 填入你的 GAS 部署網址
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbwO3GebGAj7_s7ofoxbNA6xkh58ZBNCpPPnNLDvb5QIqQLH59dK1goNA8T4MW3krkKx/exec';
+
+var DAYS=[
+  {label:'Day 1',title:'抵達釜山',tag:'傍晚抵達',ev:[
+    {t:'出發',n:'公司專車→桃園機場',d:'贈轉接頭＋網卡',c:''},
+    {t:'晚上',n:'富平罐頭夜市',d:'旅行社招待糖餅 🥞',c:'hl',tg:['南浦','免費']},
+    {t:'晚餐',n:'釜山道地豬肉湯飯',d:'🍲',c:'ml'},
+    {t:'住宿',n:'NORTHHARBOR HOTEL',d:'',c:'fr'},
+  ]},
+  {label:'Day 2',title:'Arte Museum & 膠囊列車',tag:'行程豐富',ev:[
+    {t:'早',n:'飯店早餐',d:'',c:'ml'},
+    {t:'上午',n:'ARTE MUSEUM',d:'世界最大沉浸式媒體藝術展',c:'hl',tg:['海雲台','Pass']},
+    {t:'上午',n:'海岸天空膠囊列車',d:'IG 熱門・4人一車廂',c:'hl',tg:['海雲台','Pass']},
+    {t:'下午',n:'青沙浦紅白燈塔',d:'韓星孔劉推薦景點',c:'',tg:['海雲台']},
+    {t:'下午',n:'青沙浦踏石天空步道',d:'透明玻璃步道',c:'',tg:['海雲台']},
+    {t:'午餐',n:'鳳雛-安東粉絲燉雞',d:'🍗',c:'ml'},
+    {t:'晚餐',n:'海雲台貝殼一號店',d:'海鮮火烤兩吃+起司+刀削麵 🦞',c:'ml'},
+  ]},
+  {label:'Day 3',title:'SKY LUGE & 海東龍宮寺',tag:'刺激體驗',ev:[
+    {t:'早',n:'飯店早餐',d:'',c:'ml'},
+    {t:'上午',n:'Skyline Luge 斜坡滑車',d:'每人體驗兩次！',c:'hl',tg:['Pass','刺激']},
+    {t:'下午',n:'海東龍宮寺',d:'釜山最美海景寺廟',c:'',tg:['海雲台']},
+    {t:'下午',n:'樂天 Outlet',d:'超市＋影城＋購物中心',c:'',tg:['海雲台']},
+    {t:'午餐',n:'韓國烤魚定食',d:'🐟',c:'ml'},
+    {t:'晚餐',n:'自由時間 🌙',d:'可自行安排！',c:'fr',tg:['自由']},
+  ]},
+  {label:'Day 4',title:'全日自由活動',tag:'全日自由 🎉',ev:[
+    {t:'早',n:'飯店早餐',d:'',c:'ml'},
+    {t:'09:30',n:'白淺灘文化村',d:'影島海岸文青小村・14條小巷・免費',c:'',tg:['影島','免費']},
+    {t:'10:45',n:'Go Slow 海景咖啡廳',d:'4.7⭐ 白淺灘村內評分最高',c:'',tg:['影島','咖啡廳']},
+    {t:'11:45',n:'絕影海岸散步路',d:'沿懸崖步道吹海風',c:'',tg:['影島','免費']},
+    {t:'13:45',n:'⚡ 影島大橋開橋秀',d:'每天14:00限定15分鐘！提前卡位',c:'hl',tg:['南浦','必看']},
+    {t:'14:30',n:'影島海女村（午餐）',d:'現撈海鮮，可在岩石邊野餐',c:'ml',tg:['影島']},
+    {t:'16:30',n:'🏔 荒嶺山烽火台',d:'免費！360°全景。搭計程車到停車場再步行15分',c:'hl',tg:['廣安里','免費','夕陽']},
+    {t:'18:30',n:'廣安里海灘',d:'廣安大橋日落黃金時段',c:'',tg:['廣安里']},
+    {t:'20:00',n:'Millac the Market',d:'面橋夜景 + Live Music',c:'',tg:['廣安里']},
+  ]},
+  {label:'Day 5',title:'甘川洞 & 返台',tag:'返回台灣',ev:[
+    {t:'早',n:'飯店早餐',d:'',c:'ml'},
+    {t:'上午',n:'甘川洞文化村',d:'Running Man 拍攝地',c:'hl',tg:['南浦','Pass']},
+    {t:'午餐',n:'紫菜飯捲+飲料',d:'機上不提供餐食',c:'ml'},
+    {t:'下午',n:'釜山機場出發 ✈️',d:'',c:'fr'},
+  ]},
+];
+
+var catEmoji={全部:'🔍',咖啡廳:'☕',燒肉:'🥩',海鮮:'🦞',甜點:'🍰',小吃:'🍢',景點:'🏛',購物:'🛍',其他:'🍽'};
+var curArea='廣安里', curCat='全部';
+
+// ── Toast ──
+function toast(msg){
+  var el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(function(){el.classList.remove('show');},2200);
+}
+
+// ── 營業時間格式化 ──
+function formatHours(h) {
+  if (!h) return '';
+  // 把 9-11 / 9:00-11 / 900-1100 等格式統一成 09:00-22:00
+  return h.replace(/(\d{1,2})(?::(\d{2}))?/g, function(match, hr, min) {
+    var h2 = hr.length === 1 ? '0'+hr : hr;
+    var m2 = min ? min : '00';
+    return h2+':'+m2;
+  });
+}
+
+// ── API 呼叫 ──
+function api(params, cb){
+  var qs = Object.keys(params).map(function(k){
+    return encodeURIComponent(k)+'='+encodeURIComponent(params[k]);
+  }).join('&');
+  fetch(GAS_URL+'?'+qs)
+    .then(function(r){ return r.text(); })
+    .then(function(text){
+      try{ cb(null, JSON.parse(text)); }
+      catch(e){ cb(e, null); }
+    })
+    .catch(function(err){ cb(err, null); });
+}
+
+// ── 初始化行程 ──
+function initDays(){
+  var nav=document.getElementById('dayNav');
+  var tabs=document.getElementById('dayTabs');
+  var cont=document.getElementById('dayContent');
+  DAYS.forEach(function(d,i){
+    var dot=document.createElement('div');
+    dot.className='hday'+(i===0?' active':'');
+    dot.textContent=i+1;
+    dot.onclick=function(){switchDay(i);};
+    nav.appendChild(dot);
+    var tab=document.createElement('div');
+    tab.className='tab'+(i===0?' active':'');
+    tab.textContent=d.label;
+    tab.onclick=function(){switchDay(i);};
+    tabs.appendChild(tab);
+    var panel=document.createElement('div');
+    panel.className='day-panel'+(i===0?' active':'');
+    panel.innerHTML='<div class="day-header"><div class="day-badge">'+d.label+'</div><div class="day-title">'+d.title+'</div><div class="day-lbl">'+d.tag+'</div></div><div class="timeline">'+
+      d.ev.map(function(e){
+        var tags='';
+        if(e.tg&&e.tg.length){
+          tags='<div class="etg">'+e.tg.map(function(t){
+            if(t==='免費'||t==='自由') return '<span class="tg tf">'+t+'</span>';
+            if(t==='必看'||t==='刺激') return '<span class="tg tc">'+t+'</span>';
+            if(t==='Pass') return '<span class="tg tp">Pass景點</span>';
+            return '<span class="tg ta">'+t+'</span>';
+          }).join('')+'</div>';
+        }
+        return '<div class="ev '+e.c+'"><div class="et">'+e.t+'</div><div class="eb"><div class="en">'+e.n+'</div>'+(e.d?'<div class="ed">'+e.d+'</div>':'')+tags+'</div></div>';
+      }).join('')+'</div>';
+    cont.appendChild(panel);
+  });
+}
+
+function switchDay(i){
+  document.querySelectorAll('.hday').forEach(function(el,j){el.classList.toggle('active',j===i);});
+  document.querySelectorAll('#dayTabs .tab').forEach(function(el,j){el.classList.toggle('active',j===i);});
+  document.querySelectorAll('.day-panel').forEach(function(el,j){el.classList.toggle('active',j===i);});
+}
+
+// ── 地區 ──
+function renderArea(places){
+  document.getElementById('areaLabel').textContent=curArea;
+  var total=places.length;
+  var planned=places.filter(function(p){return p.planned;}).length;
+  var linked=places.filter(function(p){return p.link;}).length;
+  document.getElementById('statsBar').innerHTML=
+    '<div class="stat"><div class="sn">'+total+'</div><div class="sl">地點總計</div></div>'+
+    '<div class="stat"><div class="sn" style="color:var(--green)">'+planned+'</div><div class="sl">已排行程</div></div>'+
+    '<div class="stat"><div class="sn" style="color:var(--gold)">'+linked+'</div><div class="sl">Naver連結</div></div>';
+
+  var cats=['全部'].concat([...new Set(places.map(function(p){return p.cat;}))]);
+  document.getElementById('catFilter').innerHTML=cats.map(function(c){
+    return '<div class="cp'+(curCat===c?' active':'')+'" onclick="setCat(\''+c+'\')">'+(catEmoji[c]||'•')+' '+c+'</div>';
+  }).join('');
+
+  var filtered=curCat==='全部'?places:places.filter(function(p){return p.cat===curCat;});
+  if(!filtered.length){
+    document.getElementById('placeList').innerHTML='<div class="empty"><div class="ei">📭</div><p>這個分類還沒有地點</p></div>';
+    return;
+  }
+  document.getElementById('placeList').innerHTML=filtered.map(function(p){
+    return '<div class="pc'+(p.planned?' pln':'')+'">'+
+      '<div class="pe">'+(catEmoji[p.cat]||'📍')+'</div>'+
+      '<div class="pb">'+
+        '<div class="pn">'+p.name+'</div>'+
+        (p.addr?'<div class="paddr">📍 '+p.addr+'</div>':'')+
+        (p.hours?'<div class="ph">🕐 '+p.hours+'</div>':'')+(p.note?'<div class="paddr">📝 '+p.note+'</div>':'')+
+        '<div class="ptg">'+
+          '<span class="pt">'+p.cat+'</span>'+
+          (p.planned?'<span class="pt" style="background:#e8f4ea;color:#3a7a48">✓ 排程中</span>':'')+
+          (p.link?'<span class="pt" style="background:#e0f8ec;color:#03C75A">🔗 Naver</span>':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="pa2">'+
+        (p.link?'<button class="ib ibn" onclick="openN(\''+p.link+'\')">N</button>':'')+
+        '<button class="ib ibd" onclick="delP('+p.idx+')">✕</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function loadArea(){
+  document.getElementById('placeList').innerHTML='<div class="loading">載入中...</div>';
+  api({action:'getFood', area:curArea}, function(err, data){
+    if(err||!Array.isArray(data)){
+      document.getElementById('placeList').innerHTML='<div class="empty"><div class="ei">⚠️</div><p>載入失敗，請檢查 GAS_URL</p></div>';
+      return;
+    }
+    renderArea(data);
+  });
+}
+
+function setCat(c){curCat=c;loadArea();}
+function openN(link){window.open(link,'_blank');}
+
+function delP(idx){
+  if(!confirm('確定刪除？')) return;
+  api({action:'delFood', idx:idx}, function(err, data){
+    if(err||!data||!data.ok){ toast('刪除失敗'); return; }
+    toast('已刪除');
+    loadArea();
+  });
+}
+
+function addPlace(){
+  var nameEl=document.getElementById('newName');
+  var linkEl=document.getElementById('newLink');
+  var hoursEl=document.getElementById('newHours');
+  var typeEl=document.getElementById('newType');
+  var name=nameEl.value.trim();
+  var link=linkEl.value.trim();
+  var hours=formatHours(hoursEl.value.trim().replace(/[\d]{4}.*GMT.*/,'').trim()); // 防止日期格式寫入
+  var noteVal=document.getElementById('newNote').value.trim();
+  var cat=typeEl.value;
+
+  if(!name){
+    nameEl.style.borderColor='var(--coral)';
+    nameEl.focus();
+    setTimeout(function(){nameEl.style.borderColor='';},1500);
+    return;
+  }
+  if(link&&!link.startsWith('http')){
+    alert('Naver 連結格式有誤');
+    linkEl.focus(); return;
+  }
+
+  toast('新增中...');
+  api({action:'addFood', area:curArea, cat:cat, name:name, hours:hours, link:link, note:noteVal}, function(err, data){
+    if(err||!data||!data.ok){ toast('新增失敗 😥'); return; }
+    nameEl.value=''; linkEl.value=''; hoursEl.value=''; document.getElementById('newNote').value='';
+    toast('✅ 已新增「'+name+'」');
+    loadArea();
+  });
+}
+
+function switchArea(el, area){
+  document.querySelectorAll('#areaTabs .tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  curArea=area; curCat='全部';
+  loadArea();
+}
+
+function switchPage(page){
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('nb-'+page).classList.add('active');
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('pg-'+page).classList.add('active');
+  if(page==='area') loadArea();
+  if(page==='shop') loadShop();
+}
+
+
+// ── 購物 ──
+var curShopArea = '廣安里';
+
+function loadShop() {
+  document.getElementById('shopList').innerHTML = '<div class="loading">載入中...</div>';
+  api({action:'getShop', area:curShopArea}, function(err, data) {
+    if (err || !Array.isArray(data)) {
+      document.getElementById('shopList').innerHTML = '<div class="empty"><div class="ei">⚠️</div><p>載入失敗</p></div>';
+      return;
+    }
+    if (!data.length) {
+      document.getElementById('shopList').innerHTML = '<div class="empty"><div class="ei">📭</div><p>還沒有購物地點</p></div>';
+      return;
+    }
+    document.getElementById('shopList').innerHTML = data.map(function(p) {
+      return '<div class="pc">' +
+        '<div class="pe">🛍</div>' +
+        '<div class="pb">' +
+          '<div class="pn">' + p.shop + '</div>' +
+          (p.area ? '<div class="paddr">📍 ' + p.area + '</div>' : '') +
+          (p.hours ? '<div class="ph">🕐 ' + p.hours + '</div>' : '') +
+          (p.link ? '<div class="ptg"><span class="pt" style="background:#e0f8ec;color:#03C75A">🔗 Naver</span></div>' : '') +
+        '</div>' +
+        '<div class="pa2">' +
+          (p.link ? '<button class="ib ibn" onclick="openN(\'' + p.link + '\')">N</button>' : '') +
+          '<button class="ib ibd" onclick="delShop(' + p.idx + ')">✕</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  });
+}
+
+function switchShopArea(el, area) {
+  document.querySelectorAll('#shopTabs .tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  curShopArea = area;
+  loadShop();
+}
+
+function switchShopMode(el, mode) {
+  document.querySelectorAll('#shopModeTabs .tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('shop-store').style.display = mode==='store' ? 'block' : 'none';
+  document.getElementById('shop-wish').style.display  = mode==='wish'  ? 'block' : 'none';
+  if (mode==='wish') loadWish();
+}
+
+function loadWish() {
+  document.getElementById('wishList').innerHTML = '<div class="loading">載入中...</div>';
+  api({action:'getWish', shop:''}, function(err, data) {
+    if (err||!Array.isArray(data)) {
+      document.getElementById('wishList').innerHTML = '<div class="empty"><div class="ei">⚠️</div><p>載入失敗</p></div>';
+      return;
+    }
+    if (!data.length) {
+      document.getElementById('wishList').innerHTML = '<div class="empty"><div class="ei">🛒</div><p>還沒有待買清單</p></div>';
+      return;
+    }
+    // Group by name then shop
+    var grouped = {};
+    data.forEach(function(p) {
+      var key = p.name || '未命名';
+      if (!grouped[key]) grouped[key] = {};
+      if (!grouped[key][p.shop]) grouped[key][p.shop] = [];
+      grouped[key][p.shop].push(p);
+    });
+    var html = '';
+    Object.keys(grouped).forEach(function(name) {
+      html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;">';
+      html += '<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;">👤 '+name+'</div>';
+      Object.keys(grouped[name]).forEach(function(shop) {
+        html += '<div style="font-size:11px;font-weight:600;color:var(--muted);margin:6px 0 3px;">🏪 '+shop+'</div>';
+        grouped[name][shop].forEach(function(p) {
+          html += '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-top:1px solid var(--border);">';
+          html += '<span style="font-size:16px;cursor:pointer" onclick="toggleWish('+p.idx+')">'+(p.done?'✅':'☐')+'</span>';
+          html += '<div style="flex:1;font-size:12px;'+(p.done?'text-decoration:line-through;color:var(--muted)':'')+'">'+p.item;
+          if (p.note) html += ' <span style="color:var(--muted);font-size:10px;">（'+p.note+'）</span>';
+          html += '</div>';
+          html += '<button class="ib ibd" onclick="delWish('+p.idx+')" style="width:24px;height:24px;font-size:10px;">✕</button>';
+          html += '</div>';
+        });
+      });
+      html += '</div>';
+    });
+    document.getElementById('wishList').innerHTML = html;
+  });
+}
+
+function toggleWish(idx) {
+  api({action:'toggleWish', idx:idx}, function(err, data) {
+    if (err||!data||!data.ok) { toast('更新失敗'); return; }
+    loadWish();
+  });
+}
+
+function addWish() {
+  var nameEl = document.getElementById('wishName');
+  var shopEl = document.getElementById('wishShop');
+  var itemEl = document.getElementById('wishItem');
+  var noteEl = document.getElementById('wishNote');
+  var name = nameEl.value.trim();
+  var shop = shopEl.value.trim();
+  var item = itemEl.value.trim();
+  var note = noteEl.value.trim();
+  if (!name) { nameEl.style.borderColor='var(--coral)'; nameEl.focus(); setTimeout(function(){nameEl.style.borderColor='';},1500); return; }
+  if (!shop) { shopEl.style.borderColor='var(--coral)'; shopEl.focus(); setTimeout(function(){shopEl.style.borderColor='';},1500); return; }
+  if (!item) { itemEl.style.borderColor='var(--coral)'; itemEl.focus(); setTimeout(function(){itemEl.style.borderColor='';},1500); return; }
+  toast('新增中...');
+  api({action:'addWish', name:name, shop:shop, item:item, note:note}, function(err, data) {
+    if (err||!data||!data.ok) { toast('新增失敗 😥'); return; }
+    shopEl.value=''; itemEl.value=''; noteEl.value='';
+    toast('✅ 已新增「'+item+'」');
+    loadWish();
+  });
+}
+
+function delWish(idx) {
+  if (!confirm('確定刪除？')) return;
+  api({action:'delWish', idx:idx}, function(err, data) {
+    if (err||!data||!data.ok) { toast('刪除失敗'); return; }
+    toast('已刪除');
+    loadWish();
+  });
+}
+
+function addShop() {
+  var areaEl  = document.getElementById('shopArea');
+  var nameEl  = document.getElementById('shopName');
+  var hoursEl = document.getElementById('shopHours');
+  var linkEl  = document.getElementById('shopLink');
+  var area  = areaEl.value;
+  var name  = nameEl.value.trim();
+  var hours = formatHours(hoursEl.value.trim());
+  var link  = linkEl.value.trim();
+  if (!name) {
+    nameEl.style.borderColor = 'var(--coral)';
+    nameEl.focus();
+    setTimeout(function(){nameEl.style.borderColor='';}, 1500);
+    return;
+  }
+  if (link && !link.startsWith('http')) {
+    alert('Naver 連結格式有誤');
+    linkEl.focus(); return;
+  }
+  toast('新增中...');
+  api({action:'addShop', area:area, shop:name, hours:hours, link:link}, function(err, data) {
+    if (err || !data || !data.ok) { toast('新增失敗 😥'); return; }
+    nameEl.value=''; hoursEl.value=''; linkEl.value='';
+    toast('✅ 已新增「' + name + '」');
+    loadShop();
+  });
+}
+
+function delShop(idx) {
+  if (!confirm('確定刪除？')) return;
+  api({action:'delShop', idx:idx}, function(err, data) {
+    if (err || !data || !data.ok) { toast('刪除失敗'); return; }
+    toast('已刪除');
+    loadShop();
+  });
+}
+initDays();
+</script>
+</body>
+</html>
