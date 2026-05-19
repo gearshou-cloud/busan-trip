@@ -244,27 +244,27 @@ function toast(msg){
   setTimeout(function(){el.classList.remove('show');},2200);
 }
 
-// ── API 呼叫 (JSONP，避免 CORS 問題) ──
-var _cbCount = 0;
+// ── API 呼叫 (JSONP) ──
+var _n = 0;
 function api(params, cb){
-  var cbName = '_gasCb' + (++_cbCount);
-  params.callback = cbName;
+  var fn = '__cb' + (++_n);
+  params.callback = fn;
   var qs = Object.keys(params).map(function(k){
     return encodeURIComponent(k)+'='+encodeURIComponent(params[k]);
   }).join('&');
-  var script = document.createElement('script');
-  script.src = GAS_URL + '?' + qs;
-  window[cbName] = function(data) {
-    delete window[cbName];
-    document.body.removeChild(script);
+  var s = document.createElement('script');
+  s.src = GAS_URL + '?' + qs;
+  window[fn] = function(data){
+    try{ document.head.removeChild(s); }catch(e){}
+    delete window[fn];
     cb(null, data);
   };
-  script.onerror = function() {
-    delete window[cbName];
-    document.body.removeChild(script);
-    cb(new Error('載入失敗'), null);
+  s.onerror = function(){
+    try{ document.head.removeChild(s); }catch(e){}
+    delete window[fn];
+    cb(new Error('fail'), null);
   };
-  document.body.appendChild(script);
+  document.head.appendChild(s);
 }
 
 // ── 初始化行程 ──
