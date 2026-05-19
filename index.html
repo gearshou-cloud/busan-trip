@@ -376,6 +376,7 @@ function renderArea(places){
         '</div>'+
       '</div>'+
       '<div class="pa2">'+
+        '<button class="ib" style="'+(p.visited?'background:#e8f4ea;color:#3a7a48':'background:#f5f0e8;color:#8a8070')+'" onclick="markVisited('+p.idx+')">'+(p.visited?'✅':'☐')+'</button>'+
         (p.link?'<button class="ib ibn" onclick="openN(\''+p.link+'\')">N</button>':'')+
         '<button class="ib ibd" onclick="delP('+p.idx+')">✕</button>'+
       '</div>'+
