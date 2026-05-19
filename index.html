@@ -507,24 +507,29 @@ function loadWish() {
       document.getElementById('wishList').innerHTML = '<div class="empty"><div class="ei">🛒</div><p>還沒有待買清單</p></div>';
       return;
     }
-    // Group by shop
+    // Group by name then shop
     var grouped = {};
     data.forEach(function(p) {
-      if (!grouped[p.shop]) grouped[p.shop] = [];
-      grouped[p.shop].push(p);
+      var key = p.name || '未命名';
+      if (!grouped[key]) grouped[key] = {};
+      if (!grouped[key][p.shop]) grouped[key][p.shop] = [];
+      grouped[key][p.shop].push(p);
     });
     var html = '';
-    Object.keys(grouped).forEach(function(shop) {
-      html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:6px;">';
-      html += '<div style="font-size:12px;font-weight:600;margin-bottom:6px;">🏪 '+shop+'</div>';
-      grouped[shop].forEach(function(p) {
-        html += '<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--border);">';
-        html += '<span style="font-size:16px;cursor:pointer" onclick="toggleWish('+p.idx+')">'+(p.done?'✅':'☐')+'</span>';
-        html += '<div style="flex:1;font-size:12px;'+(p.done?'text-decoration:line-through;color:var(--muted)':'')+'">'+p.item;
-        if (p.note) html += ' <span style="color:var(--muted);font-size:10px;">（'+p.note+'）</span>';
-        html += '</div>';
-        html += '<button class="ib ibd" onclick="delWish('+p.idx+')" style="width:24px;height:24px;font-size:10px;">✕</button>';
-        html += '</div>';
+    Object.keys(grouped).forEach(function(name) {
+      html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;">';
+      html += '<div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px;">👤 '+name+'</div>';
+      Object.keys(grouped[name]).forEach(function(shop) {
+        html += '<div style="font-size:11px;font-weight:600;color:var(--muted);margin:6px 0 3px;">🏪 '+shop+'</div>';
+        grouped[name][shop].forEach(function(p) {
+          html += '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-top:1px solid var(--border);">';
+          html += '<span style="font-size:16px;cursor:pointer" onclick="toggleWish('+p.idx+')">'+(p.done?'✅':'☐')+'</span>';
+          html += '<div style="flex:1;font-size:12px;'+(p.done?'text-decoration:line-through;color:var(--muted)':'')+'">'+p.item;
+          if (p.note) html += ' <span style="color:var(--muted);font-size:10px;">（'+p.note+'）</span>';
+          html += '</div>';
+          html += '<button class="ib ibd" onclick="delWish('+p.idx+')" style="width:24px;height:24px;font-size:10px;">✕</button>';
+          html += '</div>';
+        });
       });
       html += '</div>';
     });
@@ -540,16 +545,19 @@ function toggleWish(idx) {
 }
 
 function addWish() {
+  var nameEl = document.getElementById('wishName');
   var shopEl = document.getElementById('wishShop');
   var itemEl = document.getElementById('wishItem');
   var noteEl = document.getElementById('wishNote');
+  var name = nameEl.value.trim();
   var shop = shopEl.value.trim();
   var item = itemEl.value.trim();
   var note = noteEl.value.trim();
+  if (!name) { nameEl.style.borderColor='var(--coral)'; nameEl.focus(); setTimeout(function(){nameEl.style.borderColor='';},1500); return; }
   if (!shop) { shopEl.style.borderColor='var(--coral)'; shopEl.focus(); setTimeout(function(){shopEl.style.borderColor='';},1500); return; }
   if (!item) { itemEl.style.borderColor='var(--coral)'; itemEl.focus(); setTimeout(function(){itemEl.style.borderColor='';},1500); return; }
   toast('新增中...');
-  api({action:'addWish', shop:shop, item:item, note:note}, function(err, data) {
+  api({action:'addWish', name:name, shop:shop, item:item, note:note}, function(err, data) {
     if (err||!data||!data.ok) { toast('新增失敗 😥'); return; }
     shopEl.value=''; itemEl.value=''; noteEl.value='';
     toast('✅ 已新增「'+item+'」');
