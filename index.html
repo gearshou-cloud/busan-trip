@@ -270,6 +270,17 @@ function toast(msg){
   setTimeout(function(){el.classList.remove('show');},2200);
 }
 
+// ── 營業時間格式化 ──
+function formatHours(h) {
+  if (!h) return '';
+  // 把 9-11 / 9:00-11 / 900-1100 等格式統一成 09:00-22:00
+  return h.replace(/(\d{1,2})(?::(\d{2}))?/g, function(match, hr, min) {
+    var h2 = hr.length === 1 ? '0'+hr : hr;
+    var m2 = min ? min : '00';
+    return h2+':'+m2;
+  });
+}
+
 // ── API 呼叫 ──
 function api(params, cb){
   var qs = Object.keys(params).map(function(k){
@@ -397,7 +408,7 @@ function addPlace(){
   var typeEl=document.getElementById('newType');
   var name=nameEl.value.trim();
   var link=linkEl.value.trim();
-  var hours=hoursEl.value.trim().replace(/[\d]{4}.*GMT.*/,'').trim(); // 防止日期格式寫入
+  var hours=formatHours(hoursEl.value.trim().replace(/[\d]{4}.*GMT.*/,'').trim()); // 防止日期格式寫入
   var noteVal=document.getElementById('newNote').value.trim();
   var cat=typeEl.value;
 
@@ -562,7 +573,7 @@ function addShop() {
   var linkEl  = document.getElementById('shopLink');
   var area  = areaEl.value;
   var name  = nameEl.value.trim();
-  var hours = hoursEl.value.trim();
+  var hours = formatHours(hoursEl.value.trim());
   var link  = linkEl.value.trim();
   if (!name) {
     nameEl.style.borderColor = 'var(--coral)';
