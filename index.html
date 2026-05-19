@@ -135,7 +135,9 @@ header h1{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:900;}
       <div class="fl">② Naver Map 連結（可選）</div>
       <input class="inp" id="newLink" placeholder="https://naver.me/..." autocomplete="off">
       <div class="fl">③ 營業時間（可選）</div>
-      <input class="inp" id="newHours" placeholder="例：11:00–22:00" autocomplete="off">
+      <input class="inp" id="newHours" placeholder="例：11:00–22:00" autocomplete="off" type="text">
+      <div class="fl">④ 備註（可選）</div>
+      <input class="inp" id="newNote" placeholder="例：需要預約、限量供應" autocomplete="off" type="text">
       <button class="btn-add" onclick="addPlace()">✓ 新增地點</button>
       <div class="sync-note">☁️ 資料同步自 Google Sheets，所有裝置共享</div>
     </div>
@@ -143,9 +145,45 @@ header h1{font-family:'Noto Serif TC',serif;font-size:19px;font-weight:900;}
   </div>
 </div>
 
+
+<div id="pg-shop" class="page">
+  <div class="tabs" id="shopTabs">
+    <div class="tab active" onclick="switchShopArea(this,'廣安里')">廣安里</div>
+    <div class="tab" onclick="switchShopArea(this,'西面')">西面</div>
+    <div class="tab" onclick="switchShopArea(this,'影島')">影島</div>
+    <div class="tab" onclick="switchShopArea(this,'南浦')">南浦</div>
+    <div class="tab" onclick="switchShopArea(this,'海雲台')">海雲台</div>
+    <div class="tab" onclick="switchShopArea(this,'')">全部</div>
+  </div>
+  <div class="area-scroller">
+    <div class="sec">🛍 購物清單</div>
+    <div class="pl" id="shopList"><div class="loading">載入中...</div></div>
+    <div class="add-box">
+      <h3>➕ 新增購物地點</h3>
+      <div class="fl">① 地區</div>
+      <select class="sel" id="shopArea" style="width:100%">
+        <option value="廣安里">廣安里</option>
+        <option value="西面">西面</option>
+        <option value="影島">影島</option>
+        <option value="南浦">南浦</option>
+        <option value="海雲台">海雲台</option>
+      </select>
+      <div class="fl">② 店家名稱</div>
+      <input class="inp" id="shopName" placeholder="例：Olive Young" autocomplete="off" type="text">
+      <div class="fl">③ 營業時間（可選）</div>
+      <input class="inp" id="shopHours" placeholder="例：10:00–22:00" autocomplete="off" type="text">
+      <div class="fl">④ Naver Map 連結（可選）</div>
+      <input class="inp" id="shopLink" placeholder="https://naver.me/..." autocomplete="off" type="text">
+      <button class="btn-add" onclick="addShop()">✓ 新增購物地點</button>
+      <div class="sync-note">☁️ 資料同步自 Google Sheets，所有裝置共享</div>
+    </div>
+    <div class="hint">💡 Naver Map App → 找到地點 → 右上角「공유」→ 複製連結</div>
+  </div>
+</div>
 <div class="bnav">
   <div class="nb active" id="nb-itin" onclick="switchPage('itin')"><span class="ico">📅</span><span>行程</span></div>
   <div class="nb" id="nb-area" onclick="switchPage('area')"><span class="ico">🗺</span><span>地區</span></div>
+  <div class="nb" id="nb-shop" onclick="switchPage('shop')"><span class="ico">🛍</span><span>購物</span></div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -206,15 +244,27 @@ function toast(msg){
   setTimeout(function(){el.classList.remove('show');},2200);
 }
 
-// ── API 呼叫 ──
+// ── API 呼叫 (JSONP，避免 CORS 問題) ──
+var _cbCount = 0;
 function api(params, cb){
+  var cbName = '_gasCb' + (++_cbCount);
+  params.callback = cbName;
   var qs = Object.keys(params).map(function(k){
     return encodeURIComponent(k)+'='+encodeURIComponent(params[k]);
   }).join('&');
-  fetch(GAS_URL+'?'+qs)
-    .then(function(r){return r.json();})
-    .then(function(data){cb(null,data);})
-    .catch(function(err){cb(err,null);});
+  var script = document.createElement('script');
+  script.src = GAS_URL + '?' + qs;
+  window[cbName] = function(data) {
+    delete window[cbName];
+    document.body.removeChild(script);
+    cb(null, data);
+  };
+  script.onerror = function() {
+    delete window[cbName];
+    document.body.removeChild(script);
+    cb(new Error('載入失敗'), null);
+  };
+  document.body.appendChild(script);
 }
 
 // ── 初始化行程 ──
@@ -285,7 +335,7 @@ function renderArea(places){
       '<div class="pb">'+
         '<div class="pn">'+p.name+'</div>'+
         (p.addr?'<div class="paddr">📍 '+p.addr+'</div>':'')+
-        (p.hours?'<div class="ph">🕐 '+p.hours+'</div>':'')+
+        (p.hours?'<div class="ph">🕐 '+p.hours+'</div>':'')+(p.note?'<div class="paddr">📝 '+p.note+'</div>':'')+
         '<div class="ptg">'+
           '<span class="pt">'+p.cat+'</span>'+
           (p.planned?'<span class="pt" style="background:#e8f4ea;color:#3a7a48">✓ 排程中</span>':'')+
@@ -330,7 +380,8 @@ function addPlace(){
   var typeEl=document.getElementById('newType');
   var name=nameEl.value.trim();
   var link=linkEl.value.trim();
-  var hours=hoursEl.value.trim();
+  var hours=hoursEl.value.trim().replace(/[\d]{4}.*GMT.*/,'').trim(); // 防止日期格式寫入
+  var noteVal=document.getElementById('newNote').value.trim();
   var cat=typeEl.value;
 
   if(!name){
@@ -345,9 +396,9 @@ function addPlace(){
   }
 
   toast('新增中...');
-  api({action:'addFood', area:curArea, cat:cat, name:name, hours:hours, link:link}, function(err, data){
+  api({action:'addFood', area:curArea, cat:cat, name:name, hours:hours, link:link, note:noteVal}, function(err, data){
     if(err||!data||!data.ok){ toast('新增失敗 😥'); return; }
-    nameEl.value=''; linkEl.value=''; hoursEl.value='';
+    nameEl.value=''; linkEl.value=''; hoursEl.value=''; document.getElementById('newNote').value='';
     toast('✅ 已新增「'+name+'」');
     loadArea();
   });
@@ -366,8 +417,85 @@ function switchPage(page){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.getElementById('pg-'+page).classList.add('active');
   if(page==='area') loadArea();
+  if(page==='shop') loadShop();
 }
 
+
+// ── 購物 ──
+var curShopArea = '廣安里';
+
+function loadShop() {
+  document.getElementById('shopList').innerHTML = '<div class="loading">載入中...</div>';
+  api({action:'getShop', area:curShopArea}, function(err, data) {
+    if (err || !Array.isArray(data)) {
+      document.getElementById('shopList').innerHTML = '<div class="empty"><div class="ei">⚠️</div><p>載入失敗</p></div>';
+      return;
+    }
+    if (!data.length) {
+      document.getElementById('shopList').innerHTML = '<div class="empty"><div class="ei">📭</div><p>還沒有購物地點</p></div>';
+      return;
+    }
+    document.getElementById('shopList').innerHTML = data.map(function(p) {
+      return '<div class="pc">' +
+        '<div class="pe">🛍</div>' +
+        '<div class="pb">' +
+          '<div class="pn">' + p.shop + '</div>' +
+          (p.area ? '<div class="paddr">📍 ' + p.area + '</div>' : '') +
+          (p.hours ? '<div class="ph">🕐 ' + p.hours + '</div>' : '') +
+          (p.link ? '<div class="ptg"><span class="pt" style="background:#e0f8ec;color:#03C75A">🔗 Naver</span></div>' : '') +
+        '</div>' +
+        '<div class="pa2">' +
+          (p.link ? '<button class="ib ibn" onclick="openN(\'' + p.link + '\')">N</button>' : '') +
+          '<button class="ib ibd" onclick="delShop(' + p.idx + ')">✕</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  });
+}
+
+function switchShopArea(el, area) {
+  document.querySelectorAll('#shopTabs .tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  curShopArea = area;
+  loadShop();
+}
+
+function addShop() {
+  var areaEl  = document.getElementById('shopArea');
+  var nameEl  = document.getElementById('shopName');
+  var hoursEl = document.getElementById('shopHours');
+  var linkEl  = document.getElementById('shopLink');
+  var area  = areaEl.value;
+  var name  = nameEl.value.trim();
+  var hours = hoursEl.value.trim();
+  var link  = linkEl.value.trim();
+  if (!name) {
+    nameEl.style.borderColor = 'var(--coral)';
+    nameEl.focus();
+    setTimeout(function(){nameEl.style.borderColor='';}, 1500);
+    return;
+  }
+  if (link && !link.startsWith('http')) {
+    alert('Naver 連結格式有誤');
+    linkEl.focus(); return;
+  }
+  toast('新增中...');
+  api({action:'addShop', area:area, shop:name, hours:hours, link:link}, function(err, data) {
+    if (err || !data || !data.ok) { toast('新增失敗 😥'); return; }
+    nameEl.value=''; hoursEl.value=''; linkEl.value='';
+    toast('✅ 已新增「' + name + '」');
+    loadShop();
+  });
+}
+
+function delShop(idx) {
+  if (!confirm('確定刪除？')) return;
+  api({action:'delShop', idx:idx}, function(err, data) {
+    if (err || !data || !data.ok) { toast('刪除失敗'); return; }
+    toast('已刪除');
+    loadShop();
+  });
+}
 initDays();
 </script>
 </body>
