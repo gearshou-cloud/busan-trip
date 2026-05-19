@@ -225,6 +225,7 @@ var DAYS=[
     {t:'晚上',n:'富平罐頭夜市',d:'旅行社招待糖餅 🥞',c:'hl',tg:['南浦','免費']},
     {t:'晚餐',n:'釜山道地豬肉湯飯',d:'🍲',c:'ml'},
     {t:'住宿',n:'NORTHHARBOR HOTEL',d:'',c:'fr'},
+    {t:'宵夜',n:'百花烤腸',d:'🔗 https://naver.me/F5D1zR9o',c:'hl',tg:['南浦','燒肉']},
   ]},
   {label:'Day 2',title:'Arte Museum & 膠囊列車',tag:'行程豐富',ev:[
     {t:'早',n:'飯店早餐',d:'',c:'ml'},
@@ -252,7 +253,8 @@ var DAYS=[
     {t:'14:30',n:'影島海女村（午餐）',d:'現撈海鮮，可在岩石邊野餐',c:'ml',tg:['影島']},
     {t:'16:30',n:'🏔 荒嶺山烽火台',d:'免費！360°全景。搭計程車到停車場再步行15分',c:'hl',tg:['廣安里','免費','夕陽']},
     {t:'18:30',n:'廣安里海灘',d:'廣安大橋日落黃金時段',c:'',tg:['廣安里']},
-    {t:'20:00',n:'Millac the Market',d:'面橋夜景 + Live Music',c:'',tg:['廣安里']},
+    {t:'19:00',n:'烤肉的男子 고기굽는남자',d:'🥩 Day4 晚餐・🔗 https://naver.me/xs3GXcNv',c:'hl',tg:['廣安里','燒肉']},
+    {t:'20:30',n:'Millac the Market',d:'面橋夜景 + Live Music',c:'',tg:['廣安里']},
   ]},
   {label:'Day 5',title:'甘川洞 & 返台',tag:'返回台灣',ev:[
     {t:'早',n:'飯店早餐',d:'',c:'ml'},
@@ -369,6 +371,7 @@ function renderArea(places){
         '<div class="ptg">'+
           '<span class="pt">'+p.cat+'</span>'+
           (p.planned?'<span class="pt" style="background:#e8f4ea;color:#3a7a48">✓ 排程中</span>':'')+
+          (p.visited?'<span class="pt" style="background:#d4edda;color:#155724">✅ 去過了</span>':'')+
           (p.link?'<span class="pt" style="background:#e0f8ec;color:#03C75A">🔗 Naver</span>':'')+
         '</div>'+
       '</div>'+
